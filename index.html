@@ -1,374 +1,70 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Inventário Patrimonial</title>
-<meta name="theme-color" content="#10233f" />
-<script>
-window.SUPABASE_URL = window.SUPABASE_URL || "https://mclhbshxemzidqsiiohe.supabase.co";
-window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "sb_publishable_w3jCEOyD-0NF1eEy6gUL_g_LCsleMWC";
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
-<style>
-:root{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;color:#071a35;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}.shell{display:grid;grid-template-columns:270px 1fr;min-height:100vh}.sidebar{background:#10233f;color:#fff;padding:24px;display:flex;flex-direction:column;gap:20px}.brand{display:flex;gap:12px;align-items:center}.brand-mark{width:44px;height:44px;border-radius:9px;background:#3bbcaf;color:#071a35;display:grid;place-items:center;font-weight:900}.muted{color:#71819a}.sidebar .muted{color:#c0ccdc}.nav{display:grid;gap:8px}.nav button{border:0;border-radius:10px;background:transparent;color:#e9f1fb;text-align:left;padding:12px}.nav button.active,.nav button:hover{background:rgba(255,255,255,.13)}.profile{margin-top:auto;border-top:1px solid rgba(255,255,255,.18);padding-top:18px}.content{padding:30px;overflow:auto}.card,.panel,.login-box{background:#fff;border:1px solid #dbe3ef;border-radius:14px;box-shadow:0 10px 30px rgba(16,35,63,.06)}.panel{padding:20px;margin-bottom:18px}.page-title h1{margin:.2rem 0 1rem;font-size:2rem}.grid{display:grid;gap:16px}.stats{grid-template-columns:repeat(5,minmax(130px,1fr))}.stat{padding:18px}.stat strong{display:block;font-size:1.9rem;margin-top:6px}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}input,select{min-height:44px;border:1px solid #cbd7e6;border-radius:10px;padding:0 12px;background:#fff;color:#071a35}.btn{min-height:44px;border:0;border-radius:10px;padding:0 16px;font-weight:800}.primary{background:#10233f;color:white}.secondary{background:#e8f4f2;color:#10233f}.danger{background:#8d1d1d;color:#fff}.success{background:#37b6a6;color:#06101d}.table-wrap{overflow:auto;border:1px solid #dbe3ef;border-radius:12px;background:#fff}table{width:100%;border-collapse:collapse;min-width:920px}th,td{padding:12px 14px;border-bottom:1px solid #edf1f7;text-align:left;vertical-align:top}th{background:#f0f4f9;font-size:.86rem}.pill{display:inline-flex;border-radius:999px;padding:4px 10px;font-weight:800;background:#e9eef6}.pill.encontrado{background:#dff7eb;color:#126b3f}.pill.divergente{background:#fff1d7;color:#8a4c00}.pill.nao_cadastrado{background:#ffe2e2;color:#9b1c1c}.pill.restante{background:#e0e7ff;color:#3730a3}.tabs{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap}.tabs button{border:1px solid #cbd7e6;background:white;border-radius:10px;min-height:40px;padding:0 12px}.tabs button.active{background:#10233f;color:#fff}.login-page{min-height:100vh;display:grid;place-items:center;padding:18px}.login-box{width:min(440px,100%);padding:28px}.form{display:grid;gap:14px}.error{color:#b71919}.ok{color:#126b3f}.mobile{max-width:430px;min-height:100vh;margin:0 auto;background:#0b0b0f;color:#f8fafc;padding:14px 14px 110px;box-shadow:0 0 0 100vmax #0b0b0f;clip-path:inset(0 -100vmax)}.mobile .panel{background:#161821;border-color:#303442;color:#fff}.mobile input,.mobile select{background:#161821;color:#fff;border-color:#303442}.mobile-head{position:sticky;top:0;background:#0b0b0f;z-index:5;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding-bottom:10px}.mobile-actions{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(430px,calc(100vw - 20px));display:grid;grid-template-columns:1fr 1fr;gap:10px;background:rgba(11,11,15,.92);border:1px solid #303442;border-radius:18px;padding:10px;z-index:10}.scan-box{padding:8px;border-radius:18px;background:#161821;border:1px solid #303442}.scan-button{width:100%;min-height:96px;border:0;border-radius:14px;background:#2851dc;color:#fff;font-size:1.25rem;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px}.recent{display:grid;gap:8px}.recent-item{background:#161821;border:1px solid #303442;border-radius:10px;padding:12px;display:flex;justify-content:space-between}.install-button-floating{position:fixed;right:20px;bottom:20px;z-index:9999;padding:14px 18px;border-radius:12px;border:0;background:#10233f;color:#fff;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.25)}.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:50;padding:16px}.modal{background:#fff;color:#071a35;border-radius:16px;padding:22px;max-width:520px;width:100%;box-shadow:0 22px 60px rgba(0,0,0,.3)}@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{display:none}.content{padding:16px}.stats{grid-template-columns:1fr 1fr}.mobile{max-width:100%}}
-
-
-/* ===== UI PROFISSIONAL / MOBILE APP ===== */
-body{background:linear-gradient(135deg,#eef4fb 0%,#f7fbff 45%,#edf7f5 100%)}
-.login-page{background:radial-gradient(circle at top left,#dff7f3 0,#eef4fb 34%,#f7fbff 100%)}
-.login-layout{width:min(1040px,100%);display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch}
-.login-hero{border-radius:28px;padding:34px;background:linear-gradient(145deg,#10233f,#0d1b31);color:#fff;box-shadow:0 28px 70px rgba(16,35,63,.25);display:grid;align-content:space-between;min-height:520px;overflow:hidden;position:relative}
-.login-hero:after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-130px;top:-90px;background:rgba(55,182,166,.2)}
-.login-hero h1{font-size:2.6rem;line-height:1.05;margin:18px 0 12px}.login-hero p{color:#c8d7ea;font-size:1.05rem;max-width:520px}.login-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}.login-feature{padding:14px;border-radius:18px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12)}
-.login-feature strong{display:block;font-size:1.4rem}.login-box.pro{border-radius:28px;padding:34px;box-shadow:0 28px 70px rgba(16,35,63,.12)}
-.login-box.pro input{min-height:52px;border-radius:14px}.login-box.pro .btn{min-height:52px;border-radius:14px}.login-badge{display:inline-flex;gap:8px;align-items:center;background:#e8f4f2;color:#10233f;border-radius:999px;padding:8px 12px;font-weight:800;font-size:.85rem}.brand.pro .brand-mark{width:54px;height:54px;border-radius:16px}.brand.pro strong{font-size:1.1rem}.auth-actions{display:grid;gap:10px;margin-top:4px}
-.sidebar{box-shadow:14px 0 40px rgba(16,35,63,.08)}.nav button{display:flex;align-items:center;gap:10px}.page-title{display:flex;justify-content:space-between;gap:18px;align-items:flex-end}.page-title h1{font-size:2.2rem}.panel{border-radius:18px}.card{border-radius:18px}.stat{background:linear-gradient(180deg,#fff,#f9fbff)}
-.stat:nth-child(2){border-left:5px solid #2ea66d}.stat:nth-child(3){border-left:5px solid #d08214}.stat:nth-child(4){border-left:5px solid #d14545}.stat:nth-child(5){border-left:5px solid #4f46e5}.progress-bar{height:10px;background:#e8eef7;border-radius:999px;overflow:hidden}.progress-bar span{display:block;height:100%;background:linear-gradient(90deg,#37b6a6,#1d4ed8);border-radius:999px}.inventory-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:16px}.inventory-card{padding:18px;border-radius:20px;background:#fff;border:1px solid #dbe3ef;box-shadow:0 12px 32px rgba(16,35,63,.07);display:grid;gap:10px}.inventory-card header{display:flex;justify-content:space-between;gap:12px;align-items:start}.inventory-card h3{margin:0;font-size:1.1rem}.inventory-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}.inventory-meta div{background:#f4f7fb;border-radius:12px;padding:10px}.inventory-meta span{display:block;color:#71819a;font-size:.78rem}.inventory-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}.inventory-actions .danger{grid-column:1/-1}.create-inventory-pro{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:18px;align-items:start}.create-preview{background:linear-gradient(145deg,#10233f,#123256);color:#fff;border-radius:22px;padding:22px;min-height:220px}.create-preview p{color:#c8d7ea}.field-help{font-size:.82rem;color:#71819a;margin-top:4px}.mobile{padding:0 14px 104px;background:#090c13;box-shadow:0 0 0 100vmax #090c13}.mobile-shell{display:grid;gap:14px;padding-top:14px}.mobile-card{border-radius:22px;background:#141824;border:1px solid #2d3445;color:#fff;padding:16px;box-shadow:0 12px 38px rgba(0,0,0,.22)}.mobile-hero{border-radius:24px;padding:18px;background:linear-gradient(145deg,#10233f,#14294a 60%,#19315a);border:1px solid #314765;color:#fff}.mobile-hero .small{color:#37b6a6;font-weight:900;font-size:.76rem;letter-spacing:.06em}.mobile-hero h1{margin:6px 0 4px;font-size:1.55rem}.mobile-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.mobile-progress div{background:#0e121b;border:1px solid #2d3445;border-radius:16px;padding:10px;text-align:center}.mobile-progress strong{display:block;font-size:1.25rem}.mobile-progress span{display:block;font-size:.68rem;color:#a9b4c5;text-transform:uppercase}.mobile-bottom-nav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(430px,calc(100vw - 18px));z-index:18;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:rgba(9,12,19,.94);border:1px solid #2d3445;border-radius:22px;padding:9px;backdrop-filter:blur(14px)}.mobile-bottom-nav button{border:0;border-radius:16px;background:transparent;color:#a9b4c5;min-height:52px;font-size:.75rem;font-weight:800}.mobile-bottom-nav button.active{background:#1d4ed8;color:#fff}.mobile-fab-scan{width:100%;min-height:112px;border:0;border-radius:22px;background:linear-gradient(145deg,#1d4ed8,#2851dc);color:#fff;font-size:1.35rem;font-weight:950;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 16px 40px rgba(29,78,216,.32)}.mobile-fab-scan:active{transform:scale(.99)}.mobile-manual-row{display:grid;grid-template-columns:1fr 96px;gap:10px}.mobile-manual-row input{min-height:56px;border-radius:16px}.mobile-manual-row button{border-radius:16px}.mobile-status{min-height:110px;display:grid;align-content:center}.mobile-status .pill{width:max-content;margin-bottom:8px}.mobile-create-panel{margin-top:10px}.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick-actions .btn{border-radius:16px;min-height:54px}.mobile .recent-item{border-radius:16px}.mobile .panel{border-radius:22px}.mobile select{min-height:54px;border-radius:16px}.install-button-floating{bottom:84px}
-@media(max-width:780px){.login-layout{grid-template-columns:1fr}.login-hero{display:none}.login-box.pro{padding:26px}.stats{grid-template-columns:1fr 1fr}.create-inventory-pro{grid-template-columns:1fr}.page-title{display:block}.mobile-progress{grid-template-columns:1fr 1fr}}
-
-
-
-/* ===== LOGIN CORPORATIVO REFEITO ===== */
-.enterprise-login{background:radial-gradient(circle at 15% 10%,rgba(55,182,166,.18),transparent 28%),linear-gradient(135deg,#eef4fb,#f8fbff 45%,#eef8f5);padding:24px}
-.enterprise-shell{width:min(1120px,100%);display:grid;grid-template-columns:1.12fr .88fr;gap:26px;align-items:stretch}
-.enterprise-hero{min-height:640px;border-radius:34px;padding:36px;background:linear-gradient(145deg,#071a35,#10233f 48%,#113a5f);color:#fff;position:relative;overflow:hidden;box-shadow:0 34px 90px rgba(16,35,63,.30);display:grid;align-content:space-between}
-.enterprise-hero:before{content:"";position:absolute;inset:auto -120px -130px auto;width:360px;height:360px;border-radius:50%;background:rgba(55,182,166,.20)}
-.enterprise-hero:after{content:"";position:absolute;inset:-110px auto auto -110px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.08)}
-.enterprise-topline,.enterprise-copy,.enterprise-metrics,.enterprise-foot{position:relative;z-index:1}
-.enterprise-topline{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.02em}
-.enterprise-logo{width:48px;height:48px;border-radius:16px;background:#3bbcaf;color:#071a35;display:grid;place-items:center;font-weight:950}
-.enterprise-copy h1{font-size:3.15rem;line-height:1.02;margin:22px 0 16px;max-width:680px}
-.enterprise-copy p{color:#d4e1f2;font-size:1.08rem;line-height:1.65;max-width:650px}
-.enterprise-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.enterprise-metrics div{padding:16px;border-radius:20px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)}
-.enterprise-metrics strong{display:block;font-size:1.05rem}.enterprise-metrics span{display:block;color:#c8d7ea;font-size:.82rem;margin-top:6px;line-height:1.35}.enterprise-foot{color:#c8d7ea;font-size:.86rem}
-.enterprise-auth-card{border-radius:34px;background:rgba(255,255,255,.88);backdrop-filter:blur(18px);border:1px solid rgba(203,215,230,.95);box-shadow:0 34px 90px rgba(16,35,63,.16);padding:34px;display:grid;align-content:center;gap:18px}
-.auth-card-head{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:8px}.secure-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#edf7f5;color:#10233f;font-size:.8rem;font-weight:900;padding:8px 12px;white-space:nowrap}.enterprise-form label{gap:8px;color:#10233f}.input-shell{min-height:56px;border:1px solid #cbd7e6;border-radius:16px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px;transition:.18s}.input-shell:focus-within{border-color:#37b6a6;box-shadow:0 0 0 4px rgba(55,182,166,.14)}.input-shell input{border:0;outline:0;min-height:52px;padding:0;background:transparent;flex:1}.input-action{border:0;background:#eef4fb;border-radius:10px;min-height:34px;padding:0 10px;font-weight:800;color:#10233f}.enterprise-submit{min-height:56px;border-radius:16px;font-size:1rem;box-shadow:0 14px 28px rgba(16,35,63,.18)}.auth-links{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.auth-links button{border:0;background:transparent;color:#10233f;text-decoration:underline;font-weight:850;padding:8px 0}.auth-note{border-radius:18px;background:#f4f8fc;border:1px solid #dbe3ef;padding:14px;color:#10233f;display:grid;gap:4px}.auth-note span{color:#71819a;font-size:.88rem;line-height:1.35}.enterprise-auth-card .error{background:#fff0f0;border:1px solid #ffcaca;padding:12px;border-radius:14px}.enterprise-auth-card .ok{background:#eefaf3;border:1px solid #bde8cd;padding:12px;border-radius:14px}
-@media(max-width:860px){.enterprise-login{padding:14px}.enterprise-shell{grid-template-columns:1fr}.enterprise-hero{display:none}.enterprise-auth-card{border-radius:26px;padding:24px;min-height:auto}.auth-card-head{display:grid}.secure-chip{width:max-content}.login-page{place-items:start center}.enterprise-form .input-shell{min-height:54px}.enterprise-copy h1{font-size:2.2rem}}
-
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0B1220" />
+  <title>Inventário Patrimonial</title>
+  <script>
+    window.SUPABASE_URL = "https://mclhbshxemzidqsiiohe.supabase.co";
+    window.SUPABASE_ANON_KEY = "sb_publishable_w3jCEOyD-0NF1eEy6gUL_g_LCsleMWC";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    :root{--bg:#f4f7fb;--panel:#fff;--ink:#07142f;--muted:#667085;--line:#d9e2ef;--brand:#10233f;--accent:#37b6a6;--blue:#2563eb;--green:#16a34a;--amber:#d97706;--red:#dc2626;--purple:#6d28d9;--dark:#090e19;--card:#111827;--soft:#eef7f5}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.brand{display:flex;gap:14px;align-items:center}.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#5eead4);display:grid;place-items:center;font-weight:900;color:#04111f}.brand h1,.brand strong{margin:0;font-size:1.05rem}.brand span{color:#64748b;font-size:.9rem}.login{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;background:radial-gradient(circle at 20% 20%,#1e3a8a 0,#0b1220 38%,#020617 100%)}.login-hero{color:white;padding:7vw;display:flex;flex-direction:column;justify-content:center}.login-hero h2{font-size:clamp(2.2rem,5vw,4.4rem);line-height:1;margin:24px 0 14px}.login-hero p{font-size:1.1rem;color:#cbd5e1;max-width:640px}.hero-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:36px}.hero-card{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);backdrop-filter:blur(14px);border-radius:22px;padding:18px}.login-box-wrap{display:grid;place-items:center;padding:28px}.login-card{width:min(460px,100%);background:white;border-radius:28px;padding:32px;box-shadow:0 28px 80px rgba(0,0,0,.3)}.field{display:grid;gap:8px;margin:16px 0}.field label{font-weight:800;color:#172033}.field input,.field select{width:100%;min-height:52px;border:1px solid #cbd5e1;border-radius:14px;padding:0 14px;background:#fff}.btn{border:0;border-radius:14px;min-height:48px;padding:0 18px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:10px}.btn-primary{background:var(--brand);color:white}.btn-soft{background:#e8f4f2;color:var(--brand)}.btn-danger{background:#7f1d1d;color:white}.btn-blue{background:#1d4ed8;color:white}.btn-wide{width:100%}.error{color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;border-radius:14px;padding:12px;margin:14px 0}.shell{display:grid;grid-template-columns:290px 1fr;min-height:100vh}.side{background:#10233f;color:white;padding:24px;display:flex;flex-direction:column;gap:20px}.nav{display:grid;gap:8px}.nav button{border:0;background:transparent;color:#dbeafe;text-align:left;border-radius:14px;padding:14px 16px;font-weight:700}.nav button.active,.nav button:hover{background:rgba(255,255,255,.13);color:white}.profile{margin-top:auto;border-top:1px solid rgba(255,255,255,.16);padding-top:16px;color:#cbd5e1}.main{padding:30px;overflow:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:24px}.title small{color:#64748b;text-transform:uppercase;font-weight:900;letter-spacing:.05em}.title h2{font-size:2rem;margin:6px 0}.grid{display:grid;gap:18px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:white;border:1px solid #dbe2ed;border-radius:22px;padding:20px;box-shadow:0 14px 40px rgba(16,35,63,.06)}.stat span{color:#64748b;font-weight:700}.stat strong{font-size:2rem;display:block;margin-top:8px}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:16px 0}.search{display:flex;gap:8px;background:white;border:1px solid #cbd5e1;border-radius:14px;padding:8px;min-width:min(420px,100%)}.search input{border:0;outline:none;min-height:34px;flex:1}.table{width:100%;overflow:auto;border:1px solid #dbe2ed;border-radius:18px;background:white}.table table{border-collapse:collapse;width:100%;min-width:900px}.table th,.table td{padding:13px 14px;border-bottom:1px solid #edf2f7;text-align:left;vertical-align:top}.table th{background:#f8fafc;font-size:.84rem;color:#475569}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;font-weight:900;font-size:.8rem;background:#e5e7eb;color:#334155}.pill.encontrado{background:#dcfce7;color:#166534}.pill.divergente{background:#fef3c7;color:#92400e}.pill.nao_cadastrado{background:#fee2e2;color:#991b1b}.pill.restante{background:#ede9fe;color:#5b21b6}.inv-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}.inv-card{display:grid;gap:12px}.progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden}.progress b{display:block;height:100%;background:linear-gradient(90deg,#37b6a6,#2563eb)}.modal{position:fixed;inset:0;background:rgba(2,6,23,.6);z-index:50;display:grid;place-items:center;padding:18px}.modal-card{width:min(560px,100%);background:white;border-radius:24px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.35)}.mobile-app{min-height:100vh;background:#070b14;color:white;padding:16px 16px 88px;display:grid;gap:14px}.mobile-head{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:#070b14;padding:4px 0 12px;z-index:3}.mobile-title span{font-size:.75rem;color:#37b6a6;text-transform:uppercase;font-weight:900}.mobile-title strong{display:block}.mobile-card{background:#111827;border:1px solid #2b3548;border-radius:24px;padding:18px}.mobile-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mobile-kpi{background:#0b1220;border:1px solid #263449;border-radius:18px;padding:14px}.mobile-kpi span{color:#94a3b8;font-size:.8rem}.mobile-kpi strong{display:block;font-size:1.35rem}.scan-btn{width:100%;min-height:96px;border-radius:22px;border:0;background:#1d4ed8;color:white;font-size:1.25rem;font-weight:950;display:flex;justify-content:center;align-items:center;gap:12px}.manual{display:grid;grid-template-columns:1fr 92px;gap:10px}.manual input{min-height:56px;border-radius:16px;border:1px solid #334155;background:#111827;color:white;padding:0 14px}.result{border-radius:22px;padding:18px;background:#111827;border:1px solid #334155}.bottom-nav{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(520px,calc(100vw - 24px));background:rgba(15,23,42,.9);backdrop-filter:blur(16px);border:1px solid #334155;border-radius:24px;padding:8px;display:grid;grid-template-columns:repeat(5,1fr);z-index:10}.bottom-nav button{background:transparent;border:0;color:#cbd5e1;border-radius:16px;min-height:48px;font-size:.75rem;font-weight:800}.bottom-nav button.active{background:#37b6a6;color:#06101d}.install-banner{position:fixed;right:18px;bottom:18px;z-index:60;background:#10233f;color:white;border:1px solid #37b6a6;border-radius:18px;padding:16px;box-shadow:0 20px 50px rgba(0,0,0,.25);display:none;gap:12px;max-width:360px}.install-banner.show{display:grid}.scanner{position:fixed;inset:0;background:#020617;z-index:70;display:grid;place-items:center;padding:18px}.scanner video{width:min(640px,100%);border-radius:24px;background:black}.scanner .frame{position:absolute;width:min(480px,80vw);height:180px;border:4px solid #37b6a6;border-radius:24px;box-shadow:0 0 0 999px rgba(0,0,0,.35)}@media(max-width:900px){.login{grid-template-columns:1fr}.login-hero{display:none}.shell{display:block}.side{display:none}.main{padding:16px}.stats{grid-template-columns:repeat(2,1fr)}.desktop-only{display:none!important}.mobile-only{display:block!important}}@media(min-width:901px){.mobile-only{display:none!important}}@media(max-width:520px){.stats{grid-template-columns:1fr}.login-box-wrap{padding:16px}.login-card{padding:22px;border-radius:22px}.manual{grid-template-columns:1fr}.bottom-nav{grid-template-columns:repeat(5,1fr)}}
+  </style>
 </head>
 <body>
 <div id="app"></div>
+<div id="installBanner" class="install-banner"><strong>Instalar aplicativo</strong><span>Acesse como app no celular, com tela cheia e atalho.</span><button class="btn btn-soft" id="installBtn">Instalar</button></div>
 <script>
-(function setupManifest(){
- const svg = encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><rect width="512" height="512" fill="#3bbcaf"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="170" font-weight="900" fill="#071a35">IP</text></svg>');
- const icon = "data:image/svg+xml;charset=utf-8," + svg;
- const manifest = {name:"Patrimônio Mobile",short_name:"Patrimônio",description:"Inventário patrimonial corporativo.",start_url:"/mobile",display:"standalone",background_color:"#0b0b0f",theme_color:"#0b0b0f",orientation:"portrait",icons:[{src:icon,sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"},{src:icon,sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
- const blob = new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"});
- const link = document.createElement("link"); link.rel="manifest"; link.href=URL.createObjectURL(blob); document.head.appendChild(link);
-})();
-</script>
-<script>
-const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-const contasPermitidas = ["255","256","259","590"];
-const $ = (id)=>document.getElementById(id);
-const state = { user:null, profile:null, page:location.pathname.includes("mobile")?"mobile":"dashboard", inventories:[], currentInventory:null, deferredPrompt:null };
-window.addEventListener("beforeinstallprompt",(e)=>{e.preventDefault();state.deferredPrompt=e;renderInstallButton();});
-function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
-function onlyDigits(v){return String(v??"").replace(/\D/g,"");}
-function normalizePlaqueta(v){const d=onlyDigits(v); return d.replace(/^0+/,"") || d;}
-function isAdmin(){return state.profile?.role==="administrador" || state.profile?.papel==="administrador" || state.profile?.perfil==="administrador";}
-function roleName(){return state.profile?.role || state.profile?.papel || state.profile?.perfil || "usuário";}
-async function init(){
- const {data:{session}} = await sb.auth.getSession();
- state.user = session?.user || null;
- if(state.user) await loadProfile();
- render();
-}
-async function loadProfile(){
- const {data} = await sb.from("profiles").select("*").eq("id",state.user.id).maybeSingle();
- state.profile = data || {nome: state.user.email, role:"consulta"};
- if(!isAdmin()) state.page="mobile";
-}
-function navigate(p){state.page=p; history.replaceState(null,"",p==="mobile"?"/mobile":"/"); render();}
-function render(){
- if(!state.user) return renderLogin();
- if(!isAdmin() || state.page==="mobile") return renderMobile();
- return renderShell();
-}
-function renderLogin(){
- $("app").innerHTML = `<main class="login-page enterprise-login">
-  <div class="enterprise-shell">
-    <section class="enterprise-hero">
-      <div class="enterprise-topline"><span class="enterprise-logo">IP</span><span>Inventário Patrimonial</span></div>
-      <div class="enterprise-copy">
-        <span class="login-badge">Ambiente corporativo seguro</span>
-        <h1>Gestão patrimonial com operação mobile em tempo real.</h1>
-        <p>Controle inventários, leituras de plaquetas, divergências, bens restantes e relatórios profissionais em uma plataforma única integrada ao Supabase.</p>
-      </div>
-      <div class="enterprise-metrics">
-        <div><strong>Scanner</strong><span>Leitura por câmera e digitação manual</span></div>
-        <div><strong>RLS</strong><span>Segurança por usuário autenticado</span></div>
-        <div><strong>Realtime</strong><span>Dados sincronizados entre web e mobile</span></div>
-      </div>
-      <div class="enterprise-foot">© Inventário Patrimonial • Operação online</div>
-    </section>
-
-    <section class="enterprise-auth-card">
-      <div class="auth-card-head">
-        <div class="brand pro"><div class="brand-mark">IP</div><div><strong>Acessar sistema</strong><div class="muted">Use suas credenciais corporativas</div></div></div>
-        <span class="secure-chip">🔒 Sessão protegida</span>
-      </div>
-      <div id="authMsg"></div>
-      <div id="loginForm" class="form enterprise-form">
-        <label>E-mail corporativo
-          <div class="input-shell"><span>✉️</span><input id="email" type="email" autocomplete="email" placeholder="nome@empresa.com"></div>
-        </label>
-        <label>Senha
-          <div class="input-shell"><span>🔑</span><input id="pass" type="password" autocomplete="current-password" placeholder="Digite sua senha"><button type="button" class="input-action" onclick="togglePassword('pass', this)">Mostrar</button></div>
-        </label>
-        <button class="btn primary enterprise-submit" id="loginBtn" onclick="login()">Entrar no sistema</button>
-        <div class="auth-links"><button type="button" onclick="forgotPassword()">Esqueci minha senha</button><button type="button" onclick="showSignup()">Solicitar acesso</button></div>
-        <div class="auth-note"><strong>Perfis de acesso</strong><span>Administradores acessam o painel web. Demais usuários entram direto no aplicativo mobile.</span></div>
-      </div>
-    </section>
-  </div>
- </main>`;
-}
-function showSignup(){
- $("authMsg").innerHTML = "";
- $("loginForm").innerHTML = `<div class="form enterprise-form">
- <label>Nome completo<div class="input-shell"><span>👤</span><input id="name" placeholder="Nome do colaborador"></div></label>
- <label>Cargo / função<div class="input-shell"><span>💼</span><input id="cargo" placeholder="Ex.: Inventariante, Gerente, Auditor"></div></label>
- <label>Loja ou setor<div class="input-shell"><span>🏬</span><input id="setor" placeholder="Ex.: Loja 12 / Patrimônio"></div></label>
- <label>E-mail corporativo<div class="input-shell"><span>✉️</span><input id="email" type="email" autocomplete="email"></div></label>
- <label>Senha<div class="input-shell"><span>🔑</span><input id="pass" type="password" autocomplete="new-password"><button type="button" class="input-action" onclick="togglePassword('pass', this)">Mostrar</button></div></label>
- <label>Confirmar senha<div class="input-shell"><span>🔑</span><input id="pass2" type="password" autocomplete="new-password"><button type="button" class="input-action" onclick="togglePassword('pass2', this)">Mostrar</button></div></label>
- <button class="btn primary enterprise-submit" onclick="signup()">Enviar solicitação de acesso</button>
- <div class="auth-links"><button type="button" onclick="renderLogin()">Voltar para login</button></div>
- <div class="auth-note"><strong>Aprovação necessária</strong><span>O cadastro ficará pendente até liberação do administrador.</span></div>
- </div>`;
-}
-function togglePassword(id, btn){
- const input=$(id); if(!input) return;
- input.type = input.type === "password" ? "text" : "password";
- btn.textContent = input.type === "password" ? "Mostrar" : "Ocultar";
-}
-async function forgotPassword(){
- const email = $("email")?.value;
- if(!email) return $("authMsg").innerHTML=`<p class="error">Informe seu e-mail para recuperar a senha.</p>`;
- const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
- if(error) return $("authMsg").innerHTML=`<p class="error">${esc(error.message)}</p>`;
- $("authMsg").innerHTML=`<p class="ok">Enviamos um link de recuperação para seu e-mail.</p>`;
-}
-async function login(){
- const btn=$("loginBtn"); if(btn){btn.disabled=true; btn.textContent="Entrando...";}
- const {data,error}=await sb.auth.signInWithPassword({email:$("email").value,password:$("pass").value});
- if(error){ if(btn){btn.disabled=false; btn.textContent="Entrar no sistema";} return $("authMsg").innerHTML=`<p class="error">${esc(error.message)}</p>`;}
- state.user=data.user; await loadProfile(); render();
-}
-async function signup(){
- if($("pass").value!==$("pass2").value) return $("authMsg").innerHTML=`<p class="error">As senhas não conferem.</p>`;
- const {data,error}=await sb.auth.signUp({email:$("email").value,password:$("pass").value,options:{data:{nome:$("name").value,cargo:$("cargo").value,setor:$("setor").value}}});
- if(error) return $("authMsg").innerHTML=`<p class="error">${esc(error.message)}</p>`;
- $("authMsg").innerHTML=`<p class="ok">Cadastro solicitado. Aguarde aprovação do administrador.</p>`;
-}
-async function logout(){await sb.auth.signOut(); state.user=null; state.profile=null; renderLogin();}
-function renderShell(){
- const nav=["dashboard","bens","importar","inventarios","mobile","usuarios","config"];
- $("app").innerHTML = `<div class="shell"><aside class="sidebar">
- <div class="brand"><div class="brand-mark">IP</div><div><strong>Inventário</strong><div class="muted">Patrimônio corporativo</div></div></div>
- <nav class="nav">${nav.map(n=>`<button class="${state.page===n?'active':''}" onclick="navigate('${n}')">${labelPage(n)}</button>`).join("")}</nav>
- <div class="profile"><strong>${esc(state.profile?.nome||state.user.email)}</strong><div class="muted">${esc(roleName())}</div><br><button class="btn secondary" onclick="logout()">Sair</button></div>
- </aside><main class="content" id="main"></main></div>`;
- if(state.page==="dashboard") dashboard();
- if(state.page==="bens") bens();
- if(state.page==="importar") importar();
- if(state.page==="inventarios") inventarios();
- if(state.page==="usuarios") usuarios();
- if(state.page==="config") config();
- if(state.page==="mobile") renderMobile();
-}
-function labelPage(p){return {dashboard:"Dashboard",bens:"Bens",importar:"Importar",inventarios:"Inventários",mobile:"Mobile",usuarios:"Usuários",config:"Configurações"}[p]||p;}
-async function dashboard(){
- $("main").innerHTML=`<div class="page-title"><div><span class="muted">Visão geral</span><h1>Dashboard Executivo</h1></div><button class="btn secondary" onclick="dashboard()">Atualizar</button></div><div id="dash">Carregando...</div>`;
- let resumo=[], rel=[];
- try {
-  const [r1,r2]=await Promise.all([
-   sb.from("inventario_resumo").select("*").limit(100),
-   sb.from("relatorio_inventario_completo").select("resultado").limit(50000)
-  ]);
-  resumo=r1.data||[]; rel=r2.data||[];
- } catch(e){}
- const count = (r)=>rel.filter(x=>x.resultado===r).length;
- const total = rel.length || 1;
- const concluido = count("encontrado") + count("divergente") + count("nao_cadastrado");
- const perc = Math.round((concluido/total)*100);
- $("dash").innerHTML = `<div class="grid stats">
- ${stat("Inventários",resumo.length)}${stat("Encontrados",count("encontrado"))}${stat("Divergentes",count("divergente"))}${stat("Não cadastrados",count("nao_cadastrado"))}${stat("Restantes",count("restante"))}
- </div><section class="panel"><div class="toolbar"><div><h2>Progresso geral</h2><p class="muted">Percentual calculado sobre registros consolidados do relatório.</p></div><strong style="font-size:2rem">${perc}%</strong></div><div class="progress-bar"><span style="width:${Math.min(100,perc)}%"></span></div></section>
- <section class="panel"><div class="toolbar"><h2>Últimos inventários</h2><button class="btn secondary" onclick="navigate('inventarios')">Ver todos</button></div><div class="table-wrap"><table><thead><tr><th>Loja</th><th>Filial</th><th>CC</th><th>Status</th><th>Progresso</th></tr></thead><tbody>${resumo.slice(0,20).map(i=>`<tr><td>${esc(i.loja??i.loja_db??"")}</td><td>${esc(i.filial??"")}</td><td>${esc(i.cc??i.centro_custo??"")}</td><td>${esc(i.status??"")}</td><td><div class="progress-bar"><span style="width:${Number(i.percentual_concluido??i.percentual??0)||0}%"></span></div></td></tr>`).join("")}</tbody></table></div></section>`;
-}
-function stat(t,v){return `<div class="card stat"><span class="muted">${t}</span><strong>${v??0}</strong></div>`}
-async function bens(){
- $("main").innerHTML=`<div class="page-title"><span class="muted">Base patrimonial</span><h1>Lista de bens</h1></div>
- <section class="panel"><div class="toolbar"><div class="row"><input id="buscaBem" placeholder="Buscar plaqueta/código"><button class="btn secondary" onclick="loadBens()">Buscar</button></div><span id="bensCount"></span></div></section>
- <div id="bensTable">Carregando...</div>`;
- await loadBens();
-}
-async function loadBens(){
- const q=$("buscaBem")?.value?.trim()||"";
- let query=sb.from("bens_imobilizado").select('cod,plaq,"desc",loja_db,filial,cc,c_contabil,status', {count:"exact"}).in("c_contabil",contasPermitidas).order("plaq",{ascending:true}).limit(100);
- if(q){ const n=normalizePlaqueta(q); query=query.or(`plaq.ilike.%${q}%,cod.ilike.%${q}%,plaq.ilike.%${n}%`); }
- const {data,error,count}=await query;
- if(error) return $("bensTable").innerHTML=`<p class="error">${esc(error.message)}</p>`;
- $("bensCount").textContent = `${count??data.length} registros`;
- $("bensTable").innerHTML=`<div class="table-wrap"><table><thead><tr><th>Código</th><th>Plaqueta</th><th>Descrição</th><th>Loja</th><th>Filial</th><th>CC</th><th>C. Contábil</th><th>Status</th></tr></thead><tbody>${data.map(b=>`<tr><td>${esc(b.cod)}</td><td>${esc(b.plaq)}</td><td>${esc(b.desc)}</td><td>${esc(b.loja_db)}</td><td>${esc(b.filial)}</td><td>${esc(b.cc)}</td><td>${esc(b.c_contabil)}</td><td>${esc(b.status)}</td></tr>`).join("")}</tbody></table></div>`;
-}
-function importar(){
- $("main").innerHTML=`<div class="page-title"><span class="muted">Importação</span><h1>Importar Base Patrimonial</h1></div><section class="panel"><p>Importe arquivos Excel/CSV. Somente contas contábeis ${contasPermitidas.join(", ")} serão consideradas.</p><input type="file" id="fileImp" accept=".xlsx,.xls,.csv"><button class="btn primary" onclick="importFile()">Importar</button><div id="impOut"></div></section>`;
-}
-async function importFile(){
- const f=$("fileImp").files[0]; if(!f)return;
- $("impOut").innerHTML="Processando...";
- const buf=await f.arrayBuffer(); const wb=XLSX.read(buf); const ws=wb.Sheets[wb.SheetNames[0]]; const rows=XLSX.utils.sheet_to_json(ws,{defval:""});
- const normalized=rows.map(r=>{
-  const get=(names)=>names.map(n=>r[n]).find(v=>v!==undefined&&v!==null&&String(v).trim()!=="");
-  const c=onlyDigits(get(["C.Contábil","C. Contábil","c_contabil","C.CONTÁBIL"])||"");
-  if(!contasPermitidas.includes(c)) return null;
-  return {cod:String(get(["cod","Código","COD","Cod"])||get(["Plaqueta","plaq","Plaqueta"])||""),plaq:String(get(["Plaqueta","plaq","PLAQ","Plaqueta"])||""),desc:String(get(["Descrição","desc","DESC"])||""),data_aq:get(["data_aq","Data Aquisição"]),cc:Number(onlyDigits(get(["cc","CC","Centro de custo","C.Custo"])||""))||null,nf:String(get(["NF","nf"])||""),filial:Number(onlyDigits(get(["filial","Filial"])||""))||null,loja_db:String(get(["loja_db","Loja","loja"])||""),c_contabil:c,status:"ativo"};
- }).filter(Boolean);
- const {error}=await sb.from("bens_imobilizado").upsert(normalized,{onConflict:"cod"});
- $("impOut").innerHTML = error?`<p class="error">${esc(error.message)}</p>`:`<p class="ok">${normalized.length} bens importados/atualizados.</p>`;
-}
-async function inventarios(){
- $("main").innerHTML=`<div class="page-title"><div><span class="muted">Inventários</span><h1>Central de Inventários</h1></div><button class="btn success" onclick="invTab('criar')">+ Novo inventário</button></div>
- <div class="tabs"><button class="active" onclick="invTab('lista')">Inventários ativos</button><button onclick="invTab('criar')">Criar inventário</button><button onclick="invTab('rel')">Relatórios</button></div><div id="invArea"></div>`;
- invTab("lista");
-}
-async function invTab(tab){
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
- const labels={lista:"Inventários ativos",criar:"Criar inventário",rel:"Relatórios"};
- document.querySelectorAll(".tabs button").forEach(b=>{if(b.textContent===labels[tab]) b.classList.add("active")});
- if(tab==="lista") return loadInventariosList();
- if(tab==="criar") return renderCreateInventory("invArea");
- if(tab==="rel") return renderReports();
-}
-async function loadInventarios(){
- const {data,error}=await sb.from("inventarios").select("*").order("created_at",{ascending:false});
- state.inventories=data||[]; return {data,error};
-}
-async function loadInventariosList(){
- $("invArea").innerHTML="Carregando...";
- const {data,error}=await loadInventarios();
- if(error) return $("invArea").innerHTML=`<p class="error">${esc(error.message)}</p>`;
- $("invArea").innerHTML=`<section class="panel"><div class="toolbar"><div><h2>Inventários</h2><p class="muted">Acompanhe, exporte ou exclua inventários. A exclusão remove leituras vinculadas.</p></div><input id="invSearch" placeholder="Filtrar loja, filial ou CC" oninput="filterInventoryCards()"></div></section><div class="inventory-card-grid" id="invCards">${data.map(i=>inventoryCard(i)).join("")}</div>`;
-}
-function inventoryCard(i){
- const pct=Number(i.percentual_concluido??i.percentual??0)||0;
- return `<article class="inventory-card" data-search="${esc(`${i.loja??""} ${i.filial??""} ${i.cc??i.centro_custo??""} ${i.status??""}`.toLowerCase())}"><header><div><h3>Loja ${esc(i.loja??"")}</h3><span class="muted">${esc(i.setor||i.descricao||"Inventário patrimonial")}</span></div><span class="pill ${i.status==='finalizado'?'encontrado':''}">${esc(i.status??"aberto")}</span></header><div class="inventory-meta"><div><span>Filial</span><strong>${esc(i.filial??"")}</strong></div><div><span>Centro de custo</span><strong>${esc(i.cc??i.centro_custo??"")}</strong></div><div><span>Responsável</span><strong>${esc(i.responsavel_nome??"Equipe")}</strong></div><div><span>Criado em</span><strong>${i.created_at?esc(new Date(i.created_at).toLocaleDateString("pt-BR")):"-"}</strong></div></div><div><div class="toolbar"><small class="muted">Progresso</small><strong>${pct}%</strong></div><div class="progress-bar"><span style="width:${Math.min(100,pct)}%"></span></div></div><div class="inventory-actions"><button class="btn secondary" onclick="exportReport('${i.id}','pdf')">PDF</button><button class="btn secondary" onclick="exportReport('${i.id}','xlsx')">Excel</button><button class="btn danger" onclick="deleteInv('${i.id}')">Excluir inventário</button></div></article>`;
-}
-function filterInventoryCards(){const q=($("invSearch")?.value||"").toLowerCase();document.querySelectorAll("#invCards .inventory-card").forEach(c=>c.style.display=c.dataset.search.includes(q)?"grid":"none");}
-async function renderCreateInventory(targetId, mobile=false){
- const target=$(targetId); target.innerHTML=`<section class="panel create-inventory-pro"><div><h2>Criar inventário</h2><p class="muted">Selecione a combinação oficial de loja, filial e centro de custo vinda da tabela filiais.</p><div id="opcoes">Carregando filiais...</div></div><aside class="create-preview"><span class="login-badge">Novo inventário</span><h2>Fluxo profissional</h2><p>Depois de criado, o inventário aparece imediatamente no mobile para coleta por scanner ou digitação manual.</p><ul><li>Loja, filial e CC padronizados</li><li>Relatório consolidado</li><li>Exportação PDF/Excel</li></ul></aside></section>`;
- let ops=(await sb.from("inventario_opcoes_filiais").select("*").order("loja")).data;
- if(!ops) ops=(await sb.from("filiais").select("id,loja,filial,cc,descricao,cidade,estado").order("loja")).data || [];
- target.querySelector("#opcoes").innerHTML = `<div class="form"><label>Loja / Filial / CC<select id="${mobile?'mobInvOpt':'invOpt'}">${ops.map(o=>`<option value='${JSON.stringify(o).replaceAll("'","&apos;")}'>Loja ${esc(o.loja??"")} • Filial ${esc(o.filial??"")} • CC ${esc(o.cc??"")} • ${esc(o.descricao??"")}</option>`).join("")}</select><span class="field-help">Dados carregados da tabela filiais da Supabase.</span></label><button class="btn success" onclick="${mobile?'createInventoryMobile()':'createInventory()'}">Criar Inventário</button></div>`;
-}
-async function createInventory(){await createInventoryBase("invOpt"); await loadInventariosList();}
-async function createInventoryMobile(){await createInventoryBase("mobInvOpt"); state.showCreate=false; await renderMobile();}
-async function createInventoryBase(id){
- const o=JSON.parse($(id).value);
- const row={loja:String(o.loja??""),filial:String(o.filial??""),cc:String(o.cc??""),setor:String(o.descricao??""),status:"aberto",responsavel_id:state.user.id};
- const {data,error}=await sb.from("inventarios").insert(row).select().single();
- if(error) return alert(error.message);
- try{await sb.rpc("atualizar_totais_inventario",{p_inventario_id:data.id});}catch(e){}
- alert("Inventário criado com sucesso.");
-}
-async function deleteInv(id){if(!confirm("Excluir inventário e todas as leituras vinculadas?"))return; const {error}=await sb.from("inventarios").delete().eq("id",id); if(error)alert(error.message); else loadInventariosList();}
-async function renderReports(){ $("invArea").innerHTML=`<section class="panel"><h2>Relatórios</h2><p>Selecione um inventário na lista e exporte em PDF ou Excel.</p></section>`; }
-async function getReport(id){
- const {data,error}=await sb.from("relatorio_inventario_completo").select("*").eq("inventario_id",id).order("resultado");
- if(error) throw error; return data||[];
-}
-async function exportReport(id,type){
- const rows=await getReport(id);
- if(type==="xlsx"){
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),"Relatório");
-  XLSX.writeFile(wb,`inventario_${id}.xlsx`);
- }else{
-  const {jsPDF}=window.jspdf; const doc=new jsPDF({orientation:"landscape"});
-  doc.setFontSize(18); doc.text("Relatório Profissional de Inventário Patrimonial",14,16);
-  doc.setFontSize(9); doc.text(`Gerado em ${new Date().toLocaleString("pt-BR")}`,14,23);
-  const resumo=["encontrado","divergente","nao_cadastrado","restante"].map(r=>`${r}: ${rows.filter(x=>x.resultado===r).length}`).join("   ");
-  doc.text(resumo,14,30);
-  doc.autoTable({startY:36,head:[["Resultado","Plaqueta","Descrição","Loja esp.","Filial esp.","CC esp.","Loja enc.","Filial enc.","CC enc.","Observações"]],body:rows.map(r=>[r.resultado,r.plaqueta_lida||r.plaq||r.plaqueta,r.descricao||r.desc,r.loja_esperada,r.filial_esperada,r.cc_esperado||r.centro_custo_esperado,r.loja_encontrada,r.filial_encontrada,r.cc_encontrado||r.centro_custo_encontrado,r.observacoes]) ,styles:{fontSize:7},headStyles:{fillColor:[16,35,63]}});
-  doc.save(`relatorio_inventario_${id}.pdf`);
- }
-}
-async function usuarios(){ $("main").innerHTML=`<div class="page-title"><h1>Usuários</h1></div><section class="panel" id="users">Carregando...</section>`; const {data,error}=await sb.from("profiles").select("*").order("created_at",{ascending:false}); if(error)return $("users").innerHTML=`<p class=error>${esc(error.message)}</p>`; $("users").innerHTML=`<div class=table-wrap><table><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th></tr></thead><tbody>${data.map(u=>`<tr><td>${esc(u.nome)}</td><td>${esc(u.email)}</td><td>${esc(u.role||u.papel||u.perfil)}</td><td>${esc(u.status)}</td></tr>`).join("")}</tbody></table></div>`;}
-function config(){ $("main").innerHTML=`<div class="page-title"><h1>Configurações</h1></div><section class="panel"><p>Supabase conectado: ${esc(window.SUPABASE_URL)}</p></section>`; }
-async function renderMobile(){
- $("app").innerHTML=`<main class="mobile"><div class="mobile-shell"><div class="mobile-head"><div><span style="color:#37b6a6;font-weight:900;letter-spacing:.06em">PATRIMÔNIO MOBILE</span><br><strong>${esc(state.profile?.nome||state.user.email)}</strong></div>${isAdmin()?`<button class="btn secondary" onclick="navigate('dashboard')">← Painel</button>`:""}</div>
- <section class="mobile-hero"><span class="small">Inventário em campo</span><h1>Coleta de plaquetas</h1><p class="muted">Selecione ou crie um inventário, leia a plaqueta e acompanhe o progresso em tempo real.</p></section>
- <section class="mobile-card"><label>Inventário ativo<select id="mobInv" onchange="selectMobInv()"></select></label><div class="quick-actions" style="margin-top:10px"><button class="btn success" onclick="showCreateMobile()">+ Criar Inventário</button><button class="btn secondary" onclick="loadMobileInventories()">Atualizar</button></div><div id="mobileCreate" class="mobile-create-panel"></div></section>
- <section class="mobile-card"><div class="mobile-progress"><div><strong id="mpTotal">0</strong><span>Total</span></div><div><strong id="mpOk">0</strong><span>Encontrados</span></div><div><strong id="mpDiv">0</strong><span>Diverg.</span></div><div><strong id="mpRest">0</strong><span>Rest.</span></div></div></section>
- <section class="scan-box"><button class="mobile-fab-scan" onclick="startScan()">▣ Ler Plaqueta</button></section>
- <section class="mobile-card"><div class="mobile-manual-row"><input id="manualPlaqueta" placeholder="Digitar plaqueta"><button class="btn secondary" onclick="saveReading()">Salvar</button></div><div id="mobMsg"></div></section>
- <section class="mobile-card mobile-status"><strong id="lastStatus">AGUARDANDO LEITURA</strong><p id="lastDetail" class="muted">Câmera ou digitação manual disponível.</p></section>
- <section><h3>Últimas leituras</h3><div class="recent" id="recent"></div></section></div>
- <nav class="mobile-bottom-nav"><button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})">Início</button><button onclick="startScan()">Scanner</button><button onclick="showCreateMobile()">Criar</button><button onclick="finishMobile()">Finalizar</button></nav></main>`;
- await loadMobileInventories(); renderInstallButton(); await updateMobileProgress();
-}
-async function loadMobileInventories(){
- const {data}=await loadInventarios(); const sel=$("mobInv"); sel.innerHTML=(data||[]).map(i=>`<option value="${i.id}">Loja ${esc(i.loja??"")} - Filial ${esc(i.filial??"")} - CC ${esc(i.cc??i.centro_custo??"")}</option>`).join("");
- state.currentInventory=data?.[0]||null; await loadRecent(); await updateMobileProgress();
-}
-async function updateMobileProgress(){
- if(!state.currentInventory) return;
- const {data}=await sb.from("relatorio_inventario_completo").select("resultado").eq("inventario_id",state.currentInventory.id).limit(50000);
- const rows=data||[]; const c=r=>rows.filter(x=>x.resultado===r).length;
- if($("mpTotal")) $("mpTotal").textContent=String(rows.length);
- if($("mpOk")) $("mpOk").textContent=String(c("encontrado"));
- if($("mpDiv")) $("mpDiv").textContent=String(c("divergente"));
- if($("mpRest")) $("mpRest").textContent=String(c("restante"));
-}
-function selectMobInv(){state.currentInventory=state.inventories.find(i=>i.id===$("mobInv").value); loadRecent(); updateMobileProgress();}
-function showCreateMobile(){state.showCreate=true; renderCreateInventory("mobileCreate",true);}
-async function saveReading(value){
- const plaqueta=(value||$("manualPlaqueta").value||"").trim(); if(!plaqueta)return;
- if(!state.currentInventory) return $("mobMsg").innerHTML=`<p class=error>Selecione ou crie um inventário.</p>`;
- const {data,error}=await sb.rpc("registrar_leitura_inventario",{p_inventario_id:state.currentInventory.id,p_plaqueta:plaqueta});
- if(error) return $("mobMsg").innerHTML=`<p class=error>${esc(error.message)}</p>`;
- const row=Array.isArray(data)?data[0]:data;
- const res=row?.resultado||"encontrado";
- $("lastStatus").innerHTML=`<span class="pill ${res}">${esc(res)}</span>`;
- $("lastDetail").textContent=`Plaqueta ${plaqueta} registrada.`;
- $("manualPlaqueta").value=""; $("mobMsg").innerHTML=`<p class=ok>Leitura salva.</p>`;
- loadRecent(); updateMobileProgress();
-}
-async function loadRecent(){
- if(!state.currentInventory || !$("recent"))return;
- const {data}=await sb.from("leituras").select("plaqueta_lida,resultado,created_at").eq("inventario_id",state.currentInventory.id).order("created_at",{ascending:false}).limit(10);
- $("recent").innerHTML=(data&&data.length)?data.map(l=>`<div class=recent-item><strong>${esc(l.plaqueta_lida)}</strong><span class="pill ${l.resultado}">${esc(l.resultado)}</span></div>`).join(""):`<p class=muted>Nenhuma leitura registrada neste inventário.</p>`;
-}
-function nextReading(){ $("manualPlaqueta").value=""; $("lastStatus").textContent="AGUARDANDO LEITURA"; $("lastDetail").textContent="Câmera ou digitação manual disponível."; }
-async function finishMobile(){
- if(!state.currentInventory)return;
- await sb.from("inventarios").update({status:"finalizado"}).eq("id",state.currentInventory.id);
- showExportPopup(state.currentInventory.id);
-}
-function showExportPopup(id){
- const div=document.createElement("div"); div.className="modal-bg"; div.innerHTML=`<div class=modal><h2>Inventário finalizado</h2><p>Deseja exportar os relatórios agora?</p><div class=row><button class="btn primary" onclick="exportReport('${id}','pdf')">Exportar PDF</button><button class="btn secondary" onclick="exportReport('${id}','xlsx')">Exportar Excel</button><button class="btn danger" onclick="this.closest('.modal-bg').remove()">Fechar</button></div></div>`; document.body.appendChild(div);
-}
-async function startScan(){
- if(!("BarcodeDetector" in window)){alert("Use a câmera pelo navegador compatível ou digite manualmente.");return;}
- try{
-  const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
-  const video=document.createElement("video"); video.srcObject=stream; video.play();
-  const detector=new BarcodeDetector({formats:["code_128","code_39","ean_13","ean_8","itf"]});
-  let tries=0; const timer=setInterval(async()=>{tries++; const codes=await detector.detect(video).catch(()=>[]); if(codes[0]){clearInterval(timer); stream.getTracks().forEach(t=>t.stop()); saveReading(codes[0].rawValue);} if(tries>80){clearInterval(timer);stream.getTracks().forEach(t=>t.stop());alert("Não foi possível ler. Digite manualmente.");}},250);
- }catch(e){alert("Não foi possível abrir a câmera: "+e.message);}
-}
-function renderInstallButton(){
- if(!state.deferredPrompt || $("installBtn")) return;
- const b=document.createElement("button"); b.id="installBtn"; b.className="install-button-floating"; b.textContent="Baixar aplicativo"; b.onclick=async()=>{await state.deferredPrompt.prompt(); state.deferredPrompt=null; b.remove();}; document.body.appendChild(b);
-}
+const ALLOWED_CONTAS=["255","256","259","590"];
+const $=(id)=>document.getElementById(id);
+const app=$('app');
+const sb=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY);
+let session=null, profile=null, route='dashboard', mobileTab='home', activeInventory=null, recent=[], deferredPrompt=null;
+function esc(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+function toast(msg){alert(msg)}
+function normalizePlaqueta(v){return String(v??'').trim().replace(/\D/g,'').replace(/^0+/,'')||String(v??'').trim()}
+function setHTML(id,html){const el=$(id); if(el) el.innerHTML=html}
+function fmt(n){return Number(n||0).toLocaleString('pt-BR')}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBanner')?.classList.add('show')});
+$('installBtn')?.addEventListener('click',async()=>{if(deferredPrompt){await deferredPrompt.prompt();deferredPrompt=null;$('installBanner')?.classList.remove('show')}else toast('No Android/Chrome use o menu do navegador: Adicionar à tela inicial.')});
+if('serviceWorker' in navigator){try{navigator.serviceWorker.register('/sw.js')}catch(e){}}
+async function init(){const r=await sb.auth.getSession(); session=r.data.session; if(session) await loadProfile(); render();}
+async function loadProfile(){const u=session?.user; if(!u)return; const {data}=await sb.from('profiles').select('*').eq('id',u.id).maybeSingle(); profile=data||{id:u.id,nome:u.email,papel:'consulta',status:'ativo'}; if(profile.papel!=='administrador') route='mobile';}
+function render(){if(!session)return loginView(); if(route==='mobile') return mobileView(); return shellView();}
+function loginView(){app.innerHTML=`<section class="login"><div class="login-hero"><div class="brand"><div class="logo">IP</div><div><h1>Inventário Patrimonial</h1><span>Operação corporativa de ativos</span></div></div><h2>Controle patrimonial com leitura mobile.</h2><p>Inventários em tempo real, relatórios profissionais, scanner de plaquetas e auditoria integrada ao Supabase.</p><div class="hero-grid"><div class="hero-card">✓ Scanner mobile</div><div class="hero-card">✓ Relatórios PDF/Excel</div><div class="hero-card">✓ RLS e autenticação</div><div class="hero-card">✓ Dashboard executivo</div></div></div><div class="login-box-wrap"><div class="login-card"><div class="brand"><div class="logo">IP</div><div><strong>Entrar no sistema</strong><span>Ambiente seguro Supabase</span></div></div><div id="loginError"></div><div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="email"></div><div class="field"><label>Senha</label><input id="senha" type="password" autocomplete="current-password"></div><button class="btn btn-primary btn-wide" onclick="login()">Entrar</button><button class="btn btn-soft btn-wide" style="margin-top:12px" onclick="cadastroView()">Novo cadastro</button></div></div></section>`}
+function cadastroView(){app.innerHTML=`<section class="login"><div class="login-hero"><div class="brand"><div class="logo">IP</div><div><h1>Inventário Patrimonial</h1><span>Solicitação de acesso</span></div></div><h2>Cadastro com aprovação administrativa.</h2><p>Após o cadastro, o administrador aprova seu perfil na tela de usuários.</p></div><div class="login-box-wrap"><div class="login-card"><div class="brand"><div class="logo">IP</div><div><strong>Novo cadastro</strong><span>Solicitar acesso</span></div></div><div id="loginError"></div><div class="field"><label>Nome</label><input id="nome"></div><div class="field"><label>Cargo / função</label><input id="cargo"></div><div class="field"><label>Loja ou setor</label><input id="setor"></div><div class="field"><label>E-mail</label><input id="email" type="email"></div><div class="field"><label>Senha</label><input id="senha" type="password"></div><button class="btn btn-primary btn-wide" onclick="signup()">Cadastrar</button><button class="btn btn-soft btn-wide" style="margin-top:12px" onclick="loginView()">Voltar para login</button></div></div></section>`}
+async function login(){setHTML('loginError',''); const email=$('email').value.trim(), password=$('senha').value; const {data,error}=await sb.auth.signInWithPassword({email,password}); if(error)return setHTML('loginError',`<div class="error">${esc(error.message)}</div>`); session=data.session; await loadProfile(); render();}
+async function signup(){const email=$('email').value.trim(), password=$('senha').value; const meta={nome:$('nome').value,cargo:$('cargo').value,setor:$('setor').value}; const {error}=await sb.auth.signUp({email,password,options:{data:meta}}); if(error)return setHTML('loginError',`<div class="error">${esc(error.message)}</div>`); setHTML('loginError',`<div class="card" style="background:#dcfce7;color:#166534">Cadastro enviado. Aguarde aprovação.</div>`)}
+async function logout(){await sb.auth.signOut();session=null;profile=null;render()}
+function shellView(){app.innerHTML=`<div class="shell"><aside class="side"><div class="brand"><div class="logo">IP</div><div><strong>Inventário</strong><span>Patrimônio corporativo</span></div></div><nav class="nav"><button class="${route==='dashboard'?'active':''}" onclick="go('dashboard')">Dashboard</button><button class="${route==='bens'?'active':''}" onclick="go('bens')">Bens</button><button class="${route==='inventarios'?'active':''}" onclick="go('inventarios')">Inventários</button><button onclick="go('mobile')">Mobile</button><button class="${route==='usuarios'?'active':''}" onclick="go('usuarios')">Usuários</button></nav><div class="profile"><b>${esc(profile?.nome||session.user.email)}</b><br>${esc(profile?.papel||'')}</div></aside><main class="main"><div id="page"></div></main></div>`; loadPage()}
+function go(r){route=r; render()}
+async function loadPage(){if(route==='dashboard')dashboard(); if(route==='bens')bens(); if(route==='inventarios')inventarios(); if(route==='usuarios')usuarios();}
+async function dashboard(){setHTML('page',`<div class="topbar"><div class="title"><small>Visão executiva</small><h2>Dashboard</h2></div><button class="btn btn-soft" onclick="dashboard()">Atualizar</button></div><div id="stats" class="grid stats"></div><div class="card"><h3>Inventários recentes</h3><div id="recentInv"></div></div>`); const [bensC,inv,leit]=await Promise.all([sb.from('bens_imobilizado').select('cod',{count:'exact',head:true}).in('c_contabil',ALLOWED_CONTAS),sb.from('inventarios').select('*').order('created_at',{ascending:false}).limit(6),sb.from('inventario_resumo').select('*').limit(20)]); const rows=leit.data||[]; const totals=rows.reduce((a,r)=>{a.encontrado+=Number(r.encontrados||r.encontrado||0);a.divergente+=Number(r.divergentes||r.divergente||0);a.nao+=Number(r.nao_cadastrados||r.nao_cadastrado||0);a.restante+=Number(r.restantes||r.restante||0);return a},{encontrado:0,divergente:0,nao:0,restante:0}); setHTML('stats',`<div class="card stat"><span>Bens ativos</span><strong>${fmt(bensC.count)}</strong></div><div class="card stat"><span>Encontrados</span><strong>${fmt(totals.encontrado)}</strong></div><div class="card stat"><span>Divergentes</span><strong>${fmt(totals.divergente)}</strong></div><div class="card stat"><span>Restantes</span><strong>${fmt(totals.restante)}</strong></div>`); setHTML('recentInv',(inv.data||[]).map(i=>`<div class="card" style="margin:10px 0"><b>${esc(i.nome||'Inventário')}</b><br><span>${esc(i.loja||'')} Filial ${esc(i.filial||'')} CC ${esc(i.cc||'')}</span></div>`).join('')||'Nenhum inventário.');}
+async function bens(){setHTML('page',`<div class="topbar"><div class="title"><small>Base patrimonial</small><h2>Lista de bens</h2></div></div><div class="toolbar"><div class="search"><input id="qBens" placeholder="Buscar plaqueta com ou sem zero"><button class="btn btn-soft" onclick="loadBens()">Buscar</button></div></div><div class="table"><table><thead><tr><th>Cód.</th><th>Plaqueta</th><th>Descrição</th><th>Loja</th><th>Filial</th><th>CC</th><th>C. Contábil</th><th>Status</th></tr></thead><tbody id="bensRows"></tbody></table></div>`); loadBens();}
+async function loadBens(){const q=normalizePlaqueta($('qBens')?.value||''); let query=sb.from('bens_imobilizado').select('cod,plaq,"desc",loja_db,filial,cc,c_contabil,status').in('c_contabil',ALLOWED_CONTAS).order('plaq').limit(100); if(q) query=query.or(`plaq.eq.${q},plaq.ilike.%${q}%`); const {data,error}=await query; if(error)return setHTML('bensRows',`<tr><td colspan="8">${esc(error.message)}</td></tr>`); setHTML('bensRows',(data||[]).map(b=>`<tr><td>${esc(b.cod)}</td><td><b>${esc(b.plaq)}</b></td><td>${esc(b.desc)}</td><td>${esc(b.loja_db)}</td><td>${esc(b.filial)}</td><td>${esc(b.cc)}</td><td>${esc(b.c_contabil)}</td><td>${esc(b.status)}</td></tr>`).join('')||'<tr><td colspan="8">Nenhum bem encontrado.</td></tr>')}
+async function inventarios(){setHTML('page',`<div class="topbar"><div class="title"><small>Gestão operacional</small><h2>Inventários</h2></div><button class="btn btn-primary" onclick="openCreateInventory()">Criar inventário</button></div><div id="invList" class="grid inv-grid"></div>`); loadInventarios()}
+async function loadInventarios(){const {data,error}=await sb.from('inventarios').select('*').order('created_at',{ascending:false}).limit(50); if(error)return setHTML('invList',`<div class="error">${esc(error.message)}</div>`); setHTML('invList',(data||[]).map(i=>{const done=Number(i.total_lido||0), exp=Number(i.total_esperado||0), pct=exp?Math.round(done/exp*100):0; return `<div class="card inv-card"><div><b>${esc(i.nome||'Inventário')}</b><br><span>${esc(i.loja||'')} • Filial ${esc(i.filial||'')} • CC ${esc(i.cc||'')}</span></div><div class="progress"><b style="width:${pct}%"></b></div><small>${pct}% concluído • ${fmt(done)} / ${fmt(exp)}</small><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-soft" onclick="selectInventory('${i.id}')">Abrir no Mobile</button><button class="btn btn-blue" onclick="exportReport('${i.id}','pdf')">PDF</button><button class="btn btn-soft" onclick="exportReport('${i.id}','xlsx')">Excel</button><button class="btn btn-danger" onclick="deleteInventory('${i.id}')">Excluir</button></div></div>`}).join('')||'<div class="card">Nenhum inventário criado.</div>')}
+async function openCreateInventory(){const {data}=await sb.from('inventario_opcoes_filiais').select('*').order('loja').limit(500); const opts=(data||[]).map(f=>`<option value="${esc(JSON.stringify(f))}">Loja ${esc(f.loja)} • Filial ${esc(f.filial)} • CC ${esc(f.cc)} • ${esc(f.descricao||'')}</option>`).join(''); document.body.insertAdjacentHTML('beforeend',`<div class="modal" id="modal"><div class="modal-card"><h2>Criar inventário</h2><div class="field"><label>Loja / Filial / CC</label><select id="filialOpt">${opts}</select></div><button class="btn btn-primary btn-wide" onclick="createInventory()">Criar</button><button class="btn btn-soft btn-wide" style="margin-top:10px" onclick="$('modal').remove()">Cancelar</button></div></div>`)}
+async function createInventory(){const f=JSON.parse($('filialOpt').value); const nome=`Inventário Loja ${f.loja} - Filial ${f.filial} - CC ${f.cc}`; const {error}=await sb.from('inventarios').insert({nome,loja:String(f.loja??''),filial:String(f.filial??''),cc:String(f.cc??''),setor:f.descricao||'',status:'aberto',responsavel_id:session.user.id}); if(error)return toast(error.message); $('modal').remove(); inventarios();}
+async function deleteInventory(id){if(!confirm('Excluir inventário e todos os dados vinculados?'))return; const {error}=await sb.from('inventarios').delete().eq('id',id); if(error)toast(error.message); else inventarios();}
+function selectInventory(id){activeInventory=id; route='mobile'; render();}
+async function usuarios(){setHTML('page',`<div class="topbar"><div class="title"><small>Administração</small><h2>Usuários</h2></div></div><div class="table"><table><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th></tr></thead><tbody id="userRows"></tbody></table></div>`); const {data,error}=await sb.from('profiles').select('*').limit(200); if(error)return setHTML('userRows',`<tr><td colspan="4">${esc(error.message)}</td></tr>`); setHTML('userRows',(data||[]).map(u=>`<tr><td>${esc(u.nome)}</td><td>${esc(u.email)}</td><td>${esc(u.papel)}</td><td>${esc(u.status)}</td></tr>`).join(''))}
+async function mobileView(){app.innerHTML=`<section class="mobile-app"><div class="mobile-head"><div class="brand"><div class="logo">IP</div><div class="mobile-title"><span>Patrimônio Mobile</span><strong>${esc(profile?.nome||session.user.email)}</strong></div></div><button class="btn btn-soft" onclick="logout()">Sair</button></div><div id="mobileContent"></div><nav class="bottom-nav"><button class="${mobileTab==='home'?'active':''}" onclick="mTab('home')">Início</button><button class="${mobileTab==='inventarios'?'active':''}" onclick="mTab('inventarios')">Inventários</button><button class="${mobileTab==='scanner'?'active':''}" onclick="mTab('scanner')">Scanner</button><button class="${mobileTab==='relatorios'?'active':''}" onclick="mTab('relatorios')">Relatórios</button><button onclick="notifyMe()">Alertas</button></nav></section>`; renderMobileTab()}
+function mTab(t){mobileTab=t; renderMobileTab()}
+async function renderMobileTab(){const c=$('mobileContent'); if(!c)return; if(mobileTab==='home'){c.innerHTML=`<div class="mobile-card"><h2>Operação de Inventário</h2><p style="color:#cbd5e1">Escolha um inventário, leia plaquetas e acompanhe o progresso em tempo real.</p><button class="scan-btn" onclick="mTab('scanner')">Ler Plaqueta</button></div><div class="mobile-kpis"><div class="mobile-kpi"><span>Últimas leituras</span><strong>${recent.length}</strong></div><div class="mobile-kpi"><span>Inventário</span><strong>${activeInventory?'Ativo':'-'} </strong></div></div>`} if(mobileTab==='inventarios'){c.innerHTML=`<div class="mobile-card"><button class="btn btn-primary btn-wide" onclick="openCreateInventory()">Criar Inventário</button></div><div id="mobInv"></div>`; const {data}=await sb.from('inventarios').select('*').order('created_at',{ascending:false}).limit(20); setHTML('mobInv',(data||[]).map(i=>`<div class="mobile-card" style="margin-top:12px"><b>${esc(i.nome)}</b><br><span style="color:#94a3b8">Filial ${esc(i.filial)} • CC ${esc(i.cc)}</span><button class="btn btn-soft btn-wide" style="margin-top:10px" onclick="activeInventory='${i.id}';mTab('scanner')">Usar este inventário</button></div>`).join(''))} if(mobileTab==='scanner'){c.innerHTML=`<div class="mobile-card"><button class="scan-btn" onclick="openScanner()">▣ Ler Plaqueta</button></div><div class="manual"><input id="manualPlaqueta" placeholder="Digitar plaqueta"><button class="btn btn-soft" onclick="saveReading($('manualPlaqueta').value)">Salvar</button></div><div id="scanResult" class="result"><b>Aguardando leitura</b><p>Câmera ou digitação manual disponível.</p></div><div class="mobile-card"><button class="btn btn-danger btn-wide" onclick="finishInventory()">Finalizar inventário</button></div><div id="recentReadings"></div>`; renderRecent()} if(mobileTab==='relatorios'){c.innerHTML=`<div class="mobile-card"><h3>Relatórios</h3><button class="btn btn-blue btn-wide" onclick="exportReport(activeInventory,'pdf')">Exportar PDF</button><button class="btn btn-soft btn-wide" style="margin-top:10px" onclick="exportReport(activeInventory,'xlsx')">Exportar Excel</button></div>`}}
+function renderRecent(){setHTML('recentReadings',recent.map(r=>`<div class="mobile-card"><b>${esc(r.plaqueta_lida)}</b><br><span class="pill ${esc(r.resultado)}">${esc(r.resultado)}</span></div>`).join(''))}
+async function openScanner(){if(!navigator.mediaDevices?.getUserMedia)return toast('Câmera indisponível.'); const overlay=document.createElement('div'); overlay.className='scanner'; overlay.innerHTML=`<video id="video" autoplay playsinline></video><div class="frame"></div><button class="btn btn-danger" style="position:absolute;top:20px;right:20px" onclick="closeScanner()">Fechar</button>`; document.body.appendChild(overlay); window._scannerOverlay=overlay; const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); const video=$('video'); video.srcObject=stream; if('BarcodeDetector' in window){const detector=new BarcodeDetector({formats:['code_128','code_39','ean_13','itf']}); window._scanTimer=setInterval(async()=>{try{const codes=await detector.detect(video); if(codes.length){const val=codes[0].rawValue; closeScanner(); saveReading(val)}}catch(e){}},700)} else toast('Detector nativo indisponível. Use digitação manual.');}
+function closeScanner(){clearInterval(window._scanTimer); const v=$('video'); if(v?.srcObject) v.srcObject.getTracks().forEach(t=>t.stop()); window._scannerOverlay?.remove();}
+async function saveReading(raw){const plaqueta=String(raw||'').trim(); if(!plaqueta)return; if(!activeInventory)return toast('Selecione um inventário primeiro.'); const {data,error}=await sb.rpc('registrar_leitura_inventario',{p_inventario_id:activeInventory,p_plaqueta:plaqueta}); if(error)return setHTML('scanResult',`<div class="error">${esc(error.message)}</div>`); const row=Array.isArray(data)?data[0]:data; const r={plaqueta_lida:plaqueta,resultado:row?.resultado||'encontrado'}; recent.unshift(r); recent=recent.slice(0,8); setHTML('scanResult',`<b>${esc(plaqueta)}</b><br><span class="pill ${esc(r.resultado)}">${esc(r.resultado)}</span>`); try{navigator.vibrate?.(r.resultado==='encontrado'?80:[120,80,120])}catch(e){} renderRecent();}
+async function finishInventory(){if(!activeInventory)return toast('Selecione um inventário.'); const {error}=await sb.from('inventarios').update({status:'finalizado',finalizado_em:new Date().toISOString()}).eq('id',activeInventory); if(error)return toast(error.message); if(confirm('Inventário finalizado. Deseja exportar relatório agora?')) exportReport(activeInventory,'pdf')}
+async function exportReport(inventarioId,type){if(!inventarioId)return toast('Selecione um inventário.'); const {data,error}=await sb.from('relatorio_inventario_completo').select('*').eq('inventario_id',inventarioId).limit(5000); if(error)return toast(error.message); const rows=data||[]; if(type==='xlsx'){const ws=XLSX.utils.json_to_sheet(rows); const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Inventário'); XLSX.writeFile(wb,'relatorio_inventario.xlsx'); return} const {jsPDF}=window.jspdf; const doc=new jsPDF({orientation:'landscape'}); doc.setFontSize(18); doc.text('Relatório de Inventário Patrimonial',14,16); doc.setFontSize(10); doc.text('Drogaria Globo • Operação patrimonial corporativa',14,23); const summary=rows.reduce((a,r)=>{a[r.resultado||'outros']=(a[r.resultado||'outros']||0)+1;return a},{}); doc.text(`Encontrados: ${summary.encontrado||0} | Divergentes: ${summary.divergente||0} | Não cadastrados: ${summary.nao_cadastrado||0} | Restantes: ${summary.restante||0}`,14,31); doc.autoTable({startY:38,head:[['Plaqueta','Descrição','Resultado','Loja Esp.','Filial Esp.','CC Esp.','Loja Enc.','Filial Enc.','CC Enc.','Observações']],body:rows.slice(0,1200).map(r=>[r.plaqueta||r.plaqueta_lida||'',r.descricao||'',r.resultado||'',r.loja_esperada||'',r.filial_esperada||'',r.cc_esperado||'',r.loja_encontrada||'',r.filial_encontrada||'',r.cc_encontrado||'',r.observacoes||'']),styles:{fontSize:7,cellPadding:2},headStyles:{fillColor:[16,35,63]}}); doc.save('relatorio_inventario.pdf')}
+async function notifyMe(){if(!('Notification' in window))return toast('Notificações indisponíveis.'); const p=await Notification.requestPermission(); if(p==='granted')new Notification('Inventário Patrimonial',{body:'Notificações ativadas para o aplicativo.'}); else toast('Permissão de notificação negada.')}
 init();
 </script>
 </body>
