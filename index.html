@@ -6,8 +6,8 @@
 <title>Inventário Patrimonial</title>
 <meta name="theme-color" content="#10233f" />
 <script>
-window.SUPABASE_URL = window.SUPABASE_URL || "https://mclhbshxemzidqsiiohe.supabase.co";
-window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "sb_publishable_w3jCEOyD-0NF1eEy6gUL_g_LCsleMWC";
+window.SUPABASE_URL = window.SUPABASE_URL || "https://SEU-PROJETO.supabase.co";
+window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "SUA-CHAVE-ANON";
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -15,6 +15,40 @@ window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "sb_publishable_w3jCEOyD-
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;color:#071a35;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}.shell{display:grid;grid-template-columns:270px 1fr;min-height:100vh}.sidebar{background:#10233f;color:#fff;padding:24px;display:flex;flex-direction:column;gap:20px}.brand{display:flex;gap:12px;align-items:center}.brand-mark{width:44px;height:44px;border-radius:9px;background:#3bbcaf;color:#071a35;display:grid;place-items:center;font-weight:900}.muted{color:#71819a}.sidebar .muted{color:#c0ccdc}.nav{display:grid;gap:8px}.nav button{border:0;border-radius:10px;background:transparent;color:#e9f1fb;text-align:left;padding:12px}.nav button.active,.nav button:hover{background:rgba(255,255,255,.13)}.profile{margin-top:auto;border-top:1px solid rgba(255,255,255,.18);padding-top:18px}.content{padding:30px;overflow:auto}.card,.panel,.login-box{background:#fff;border:1px solid #dbe3ef;border-radius:14px;box-shadow:0 10px 30px rgba(16,35,63,.06)}.panel{padding:20px;margin-bottom:18px}.page-title h1{margin:.2rem 0 1rem;font-size:2rem}.grid{display:grid;gap:16px}.stats{grid-template-columns:repeat(5,minmax(130px,1fr))}.stat{padding:18px}.stat strong{display:block;font-size:1.9rem;margin-top:6px}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}input,select{min-height:44px;border:1px solid #cbd7e6;border-radius:10px;padding:0 12px;background:#fff;color:#071a35}.btn{min-height:44px;border:0;border-radius:10px;padding:0 16px;font-weight:800}.primary{background:#10233f;color:white}.secondary{background:#e8f4f2;color:#10233f}.danger{background:#8d1d1d;color:#fff}.success{background:#37b6a6;color:#06101d}.table-wrap{overflow:auto;border:1px solid #dbe3ef;border-radius:12px;background:#fff}table{width:100%;border-collapse:collapse;min-width:920px}th,td{padding:12px 14px;border-bottom:1px solid #edf1f7;text-align:left;vertical-align:top}th{background:#f0f4f9;font-size:.86rem}.pill{display:inline-flex;border-radius:999px;padding:4px 10px;font-weight:800;background:#e9eef6}.pill.encontrado{background:#dff7eb;color:#126b3f}.pill.divergente{background:#fff1d7;color:#8a4c00}.pill.nao_cadastrado{background:#ffe2e2;color:#9b1c1c}.pill.restante{background:#e0e7ff;color:#3730a3}.tabs{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap}.tabs button{border:1px solid #cbd7e6;background:white;border-radius:10px;min-height:40px;padding:0 12px}.tabs button.active{background:#10233f;color:#fff}.login-page{min-height:100vh;display:grid;place-items:center;padding:18px}.login-box{width:min(440px,100%);padding:28px}.form{display:grid;gap:14px}.error{color:#b71919}.ok{color:#126b3f}.mobile{max-width:430px;min-height:100vh;margin:0 auto;background:#0b0b0f;color:#f8fafc;padding:14px 14px 110px;box-shadow:0 0 0 100vmax #0b0b0f;clip-path:inset(0 -100vmax)}.mobile .panel{background:#161821;border-color:#303442;color:#fff}.mobile input,.mobile select{background:#161821;color:#fff;border-color:#303442}.mobile-head{position:sticky;top:0;background:#0b0b0f;z-index:5;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding-bottom:10px}.mobile-actions{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(430px,calc(100vw - 20px));display:grid;grid-template-columns:1fr 1fr;gap:10px;background:rgba(11,11,15,.92);border:1px solid #303442;border-radius:18px;padding:10px;z-index:10}.scan-box{padding:8px;border-radius:18px;background:#161821;border:1px solid #303442}.scan-button{width:100%;min-height:96px;border:0;border-radius:14px;background:#2851dc;color:#fff;font-size:1.25rem;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px}.recent{display:grid;gap:8px}.recent-item{background:#161821;border:1px solid #303442;border-radius:10px;padding:12px;display:flex;justify-content:space-between}.install-button-floating{position:fixed;right:20px;bottom:20px;z-index:9999;padding:14px 18px;border-radius:12px;border:0;background:#10233f;color:#fff;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.25)}.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:50;padding:16px}.modal{background:#fff;color:#071a35;border-radius:16px;padding:22px;max-width:520px;width:100%;box-shadow:0 22px 60px rgba(0,0,0,.3)}@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{display:none}.content{padding:16px}.stats{grid-template-columns:1fr 1fr}.mobile{max-width:100%}}
+
+
+/* ===== UI PROFISSIONAL / MOBILE APP ===== */
+body{background:linear-gradient(135deg,#eef4fb 0%,#f7fbff 45%,#edf7f5 100%)}
+.login-page{background:radial-gradient(circle at top left,#dff7f3 0,#eef4fb 34%,#f7fbff 100%)}
+.login-layout{width:min(1040px,100%);display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch}
+.login-hero{border-radius:28px;padding:34px;background:linear-gradient(145deg,#10233f,#0d1b31);color:#fff;box-shadow:0 28px 70px rgba(16,35,63,.25);display:grid;align-content:space-between;min-height:520px;overflow:hidden;position:relative}
+.login-hero:after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-130px;top:-90px;background:rgba(55,182,166,.2)}
+.login-hero h1{font-size:2.6rem;line-height:1.05;margin:18px 0 12px}.login-hero p{color:#c8d7ea;font-size:1.05rem;max-width:520px}.login-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}.login-feature{padding:14px;border-radius:18px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12)}
+.login-feature strong{display:block;font-size:1.4rem}.login-box.pro{border-radius:28px;padding:34px;box-shadow:0 28px 70px rgba(16,35,63,.12)}
+.login-box.pro input{min-height:52px;border-radius:14px}.login-box.pro .btn{min-height:52px;border-radius:14px}.login-badge{display:inline-flex;gap:8px;align-items:center;background:#e8f4f2;color:#10233f;border-radius:999px;padding:8px 12px;font-weight:800;font-size:.85rem}.brand.pro .brand-mark{width:54px;height:54px;border-radius:16px}.brand.pro strong{font-size:1.1rem}.auth-actions{display:grid;gap:10px;margin-top:4px}
+.sidebar{box-shadow:14px 0 40px rgba(16,35,63,.08)}.nav button{display:flex;align-items:center;gap:10px}.page-title{display:flex;justify-content:space-between;gap:18px;align-items:flex-end}.page-title h1{font-size:2.2rem}.panel{border-radius:18px}.card{border-radius:18px}.stat{background:linear-gradient(180deg,#fff,#f9fbff)}
+.stat:nth-child(2){border-left:5px solid #2ea66d}.stat:nth-child(3){border-left:5px solid #d08214}.stat:nth-child(4){border-left:5px solid #d14545}.stat:nth-child(5){border-left:5px solid #4f46e5}.progress-bar{height:10px;background:#e8eef7;border-radius:999px;overflow:hidden}.progress-bar span{display:block;height:100%;background:linear-gradient(90deg,#37b6a6,#1d4ed8);border-radius:999px}.inventory-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:16px}.inventory-card{padding:18px;border-radius:20px;background:#fff;border:1px solid #dbe3ef;box-shadow:0 12px 32px rgba(16,35,63,.07);display:grid;gap:10px}.inventory-card header{display:flex;justify-content:space-between;gap:12px;align-items:start}.inventory-card h3{margin:0;font-size:1.1rem}.inventory-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}.inventory-meta div{background:#f4f7fb;border-radius:12px;padding:10px}.inventory-meta span{display:block;color:#71819a;font-size:.78rem}.inventory-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}.inventory-actions .danger{grid-column:1/-1}.create-inventory-pro{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:18px;align-items:start}.create-preview{background:linear-gradient(145deg,#10233f,#123256);color:#fff;border-radius:22px;padding:22px;min-height:220px}.create-preview p{color:#c8d7ea}.field-help{font-size:.82rem;color:#71819a;margin-top:4px}.mobile{padding:0 14px 104px;background:#090c13;box-shadow:0 0 0 100vmax #090c13}.mobile-shell{display:grid;gap:14px;padding-top:14px}.mobile-card{border-radius:22px;background:#141824;border:1px solid #2d3445;color:#fff;padding:16px;box-shadow:0 12px 38px rgba(0,0,0,.22)}.mobile-hero{border-radius:24px;padding:18px;background:linear-gradient(145deg,#10233f,#14294a 60%,#19315a);border:1px solid #314765;color:#fff}.mobile-hero .small{color:#37b6a6;font-weight:900;font-size:.76rem;letter-spacing:.06em}.mobile-hero h1{margin:6px 0 4px;font-size:1.55rem}.mobile-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.mobile-progress div{background:#0e121b;border:1px solid #2d3445;border-radius:16px;padding:10px;text-align:center}.mobile-progress strong{display:block;font-size:1.25rem}.mobile-progress span{display:block;font-size:.68rem;color:#a9b4c5;text-transform:uppercase}.mobile-bottom-nav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(430px,calc(100vw - 18px));z-index:18;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:rgba(9,12,19,.94);border:1px solid #2d3445;border-radius:22px;padding:9px;backdrop-filter:blur(14px)}.mobile-bottom-nav button{border:0;border-radius:16px;background:transparent;color:#a9b4c5;min-height:52px;font-size:.75rem;font-weight:800}.mobile-bottom-nav button.active{background:#1d4ed8;color:#fff}.mobile-fab-scan{width:100%;min-height:112px;border:0;border-radius:22px;background:linear-gradient(145deg,#1d4ed8,#2851dc);color:#fff;font-size:1.35rem;font-weight:950;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 16px 40px rgba(29,78,216,.32)}.mobile-fab-scan:active{transform:scale(.99)}.mobile-manual-row{display:grid;grid-template-columns:1fr 96px;gap:10px}.mobile-manual-row input{min-height:56px;border-radius:16px}.mobile-manual-row button{border-radius:16px}.mobile-status{min-height:110px;display:grid;align-content:center}.mobile-status .pill{width:max-content;margin-bottom:8px}.mobile-create-panel{margin-top:10px}.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick-actions .btn{border-radius:16px;min-height:54px}.mobile .recent-item{border-radius:16px}.mobile .panel{border-radius:22px}.mobile select{min-height:54px;border-radius:16px}.install-button-floating{bottom:84px}
+@media(max-width:780px){.login-layout{grid-template-columns:1fr}.login-hero{display:none}.login-box.pro{padding:26px}.stats{grid-template-columns:1fr 1fr}.create-inventory-pro{grid-template-columns:1fr}.page-title{display:block}.mobile-progress{grid-template-columns:1fr 1fr}}
+
+
+
+/* ===== LOGIN CORPORATIVO REFEITO ===== */
+.enterprise-login{background:radial-gradient(circle at 15% 10%,rgba(55,182,166,.18),transparent 28%),linear-gradient(135deg,#eef4fb,#f8fbff 45%,#eef8f5);padding:24px}
+.enterprise-shell{width:min(1120px,100%);display:grid;grid-template-columns:1.12fr .88fr;gap:26px;align-items:stretch}
+.enterprise-hero{min-height:640px;border-radius:34px;padding:36px;background:linear-gradient(145deg,#071a35,#10233f 48%,#113a5f);color:#fff;position:relative;overflow:hidden;box-shadow:0 34px 90px rgba(16,35,63,.30);display:grid;align-content:space-between}
+.enterprise-hero:before{content:"";position:absolute;inset:auto -120px -130px auto;width:360px;height:360px;border-radius:50%;background:rgba(55,182,166,.20)}
+.enterprise-hero:after{content:"";position:absolute;inset:-110px auto auto -110px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.08)}
+.enterprise-topline,.enterprise-copy,.enterprise-metrics,.enterprise-foot{position:relative;z-index:1}
+.enterprise-topline{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.02em}
+.enterprise-logo{width:48px;height:48px;border-radius:16px;background:#3bbcaf;color:#071a35;display:grid;place-items:center;font-weight:950}
+.enterprise-copy h1{font-size:3.15rem;line-height:1.02;margin:22px 0 16px;max-width:680px}
+.enterprise-copy p{color:#d4e1f2;font-size:1.08rem;line-height:1.65;max-width:650px}
+.enterprise-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.enterprise-metrics div{padding:16px;border-radius:20px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)}
+.enterprise-metrics strong{display:block;font-size:1.05rem}.enterprise-metrics span{display:block;color:#c8d7ea;font-size:.82rem;margin-top:6px;line-height:1.35}.enterprise-foot{color:#c8d7ea;font-size:.86rem}
+.enterprise-auth-card{border-radius:34px;background:rgba(255,255,255,.88);backdrop-filter:blur(18px);border:1px solid rgba(203,215,230,.95);box-shadow:0 34px 90px rgba(16,35,63,.16);padding:34px;display:grid;align-content:center;gap:18px}
+.auth-card-head{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:8px}.secure-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#edf7f5;color:#10233f;font-size:.8rem;font-weight:900;padding:8px 12px;white-space:nowrap}.enterprise-form label{gap:8px;color:#10233f}.input-shell{min-height:56px;border:1px solid #cbd7e6;border-radius:16px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px;transition:.18s}.input-shell:focus-within{border-color:#37b6a6;box-shadow:0 0 0 4px rgba(55,182,166,.14)}.input-shell input{border:0;outline:0;min-height:52px;padding:0;background:transparent;flex:1}.input-action{border:0;background:#eef4fb;border-radius:10px;min-height:34px;padding:0 10px;font-weight:800;color:#10233f}.enterprise-submit{min-height:56px;border-radius:16px;font-size:1rem;box-shadow:0 14px 28px rgba(16,35,63,.18)}.auth-links{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.auth-links button{border:0;background:transparent;color:#10233f;text-decoration:underline;font-weight:850;padding:8px 0}.auth-note{border-radius:18px;background:#f4f8fc;border:1px solid #dbe3ef;padding:14px;color:#10233f;display:grid;gap:4px}.auth-note span{color:#71819a;font-size:.88rem;line-height:1.35}.enterprise-auth-card .error{background:#fff0f0;border:1px solid #ffcaca;padding:12px;border-radius:14px}.enterprise-auth-card .ok{background:#eefaf3;border:1px solid #bde8cd;padding:12px;border-radius:14px}
+@media(max-width:860px){.enterprise-login{padding:14px}.enterprise-shell{grid-template-columns:1fr}.enterprise-hero{display:none}.enterprise-auth-card{border-radius:26px;padding:24px;min-height:auto}.auth-card-head{display:grid}.secure-chip{width:max-content}.login-page{place-items:start center}.enterprise-form .input-shell{min-height:54px}.enterprise-copy h1{font-size:2.2rem}}
+
 </style>
 </head>
 <body>
@@ -57,26 +91,74 @@ function render(){
  return renderShell();
 }
 function renderLogin(){
- $("app").innerHTML = `<main class="login-page"><section class="login-box">
- <div class="brand"><div class="brand-mark">IP</div><div><strong>Inventário Patrimonial</strong><div class="muted">Operação online com Supabase</div></div></div><br>
- <div id="authMsg"></div>
- <div id="loginForm" class="form">
-  <label>E-mail<input id="email" type="email"></label>
-  <label>Senha<input id="pass" type="password"></label>
-  <button class="btn primary" onclick="login()">Entrar</button>
-  <button class="btn secondary" onclick="showSignup()">Novo Cadastro</button>
- </div>
- </section></main>`;
+ $("app").innerHTML = `<main class="login-page enterprise-login">
+  <div class="enterprise-shell">
+    <section class="enterprise-hero">
+      <div class="enterprise-topline"><span class="enterprise-logo">IP</span><span>Inventário Patrimonial</span></div>
+      <div class="enterprise-copy">
+        <span class="login-badge">Ambiente corporativo seguro</span>
+        <h1>Gestão patrimonial com operação mobile em tempo real.</h1>
+        <p>Controle inventários, leituras de plaquetas, divergências, bens restantes e relatórios profissionais em uma plataforma única integrada ao Supabase.</p>
+      </div>
+      <div class="enterprise-metrics">
+        <div><strong>Scanner</strong><span>Leitura por câmera e digitação manual</span></div>
+        <div><strong>RLS</strong><span>Segurança por usuário autenticado</span></div>
+        <div><strong>Realtime</strong><span>Dados sincronizados entre web e mobile</span></div>
+      </div>
+      <div class="enterprise-foot">© Inventário Patrimonial • Operação online</div>
+    </section>
+
+    <section class="enterprise-auth-card">
+      <div class="auth-card-head">
+        <div class="brand pro"><div class="brand-mark">IP</div><div><strong>Acessar sistema</strong><div class="muted">Use suas credenciais corporativas</div></div></div>
+        <span class="secure-chip">🔒 Sessão protegida</span>
+      </div>
+      <div id="authMsg"></div>
+      <div id="loginForm" class="form enterprise-form">
+        <label>E-mail corporativo
+          <div class="input-shell"><span>✉️</span><input id="email" type="email" autocomplete="email" placeholder="nome@empresa.com"></div>
+        </label>
+        <label>Senha
+          <div class="input-shell"><span>🔑</span><input id="pass" type="password" autocomplete="current-password" placeholder="Digite sua senha"><button type="button" class="input-action" onclick="togglePassword('pass', this)">Mostrar</button></div>
+        </label>
+        <button class="btn primary enterprise-submit" id="loginBtn" onclick="login()">Entrar no sistema</button>
+        <div class="auth-links"><button type="button" onclick="forgotPassword()">Esqueci minha senha</button><button type="button" onclick="showSignup()">Solicitar acesso</button></div>
+        <div class="auth-note"><strong>Perfis de acesso</strong><span>Administradores acessam o painel web. Demais usuários entram direto no aplicativo mobile.</span></div>
+      </div>
+    </section>
+  </div>
+ </main>`;
 }
 function showSignup(){
- $("loginForm").innerHTML = `<div class="form">
- <label>Nome<input id="name"></label><label>Cargo / função<input id="cargo"></label><label>Loja ou setor<input id="setor"></label>
- <label>E-mail<input id="email" type="email"></label><label>Senha<input id="pass" type="password"></label><label>Confirmar senha<input id="pass2" type="password"></label>
- <button class="btn primary" onclick="signup()">Cadastrar</button><button class="btn secondary" onclick="renderLogin()">Voltar para login</button></div>`;
+ $("authMsg").innerHTML = "";
+ $("loginForm").innerHTML = `<div class="form enterprise-form">
+ <label>Nome completo<div class="input-shell"><span>👤</span><input id="name" placeholder="Nome do colaborador"></div></label>
+ <label>Cargo / função<div class="input-shell"><span>💼</span><input id="cargo" placeholder="Ex.: Inventariante, Gerente, Auditor"></div></label>
+ <label>Loja ou setor<div class="input-shell"><span>🏬</span><input id="setor" placeholder="Ex.: Loja 12 / Patrimônio"></div></label>
+ <label>E-mail corporativo<div class="input-shell"><span>✉️</span><input id="email" type="email" autocomplete="email"></div></label>
+ <label>Senha<div class="input-shell"><span>🔑</span><input id="pass" type="password" autocomplete="new-password"><button type="button" class="input-action" onclick="togglePassword('pass', this)">Mostrar</button></div></label>
+ <label>Confirmar senha<div class="input-shell"><span>🔑</span><input id="pass2" type="password" autocomplete="new-password"><button type="button" class="input-action" onclick="togglePassword('pass2', this)">Mostrar</button></div></label>
+ <button class="btn primary enterprise-submit" onclick="signup()">Enviar solicitação de acesso</button>
+ <div class="auth-links"><button type="button" onclick="renderLogin()">Voltar para login</button></div>
+ <div class="auth-note"><strong>Aprovação necessária</strong><span>O cadastro ficará pendente até liberação do administrador.</span></div>
+ </div>`;
+}
+function togglePassword(id, btn){
+ const input=$(id); if(!input) return;
+ input.type = input.type === "password" ? "text" : "password";
+ btn.textContent = input.type === "password" ? "Mostrar" : "Ocultar";
+}
+async function forgotPassword(){
+ const email = $("email")?.value;
+ if(!email) return $("authMsg").innerHTML=`<p class="error">Informe seu e-mail para recuperar a senha.</p>`;
+ const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
+ if(error) return $("authMsg").innerHTML=`<p class="error">${esc(error.message)}</p>`;
+ $("authMsg").innerHTML=`<p class="ok">Enviamos um link de recuperação para seu e-mail.</p>`;
 }
 async function login(){
+ const btn=$("loginBtn"); if(btn){btn.disabled=true; btn.textContent="Entrando...";}
  const {data,error}=await sb.auth.signInWithPassword({email:$("email").value,password:$("pass").value});
- if(error) return $("authMsg").innerHTML=`<p class="error">${esc(error.message)}</p>`;
+ if(error){ if(btn){btn.disabled=false; btn.textContent="Entrar no sistema";} return $("authMsg").innerHTML=`<p class="error">${esc(error.message)}</p>`;}
  state.user=data.user; await loadProfile(); render();
 }
 async function signup(){
@@ -103,14 +185,23 @@ function renderShell(){
 }
 function labelPage(p){return {dashboard:"Dashboard",bens:"Bens",importar:"Importar",inventarios:"Inventários",mobile:"Mobile",usuarios:"Usuários",config:"Configurações"}[p]||p;}
 async function dashboard(){
- $("main").innerHTML=`<div class="page-title"><span class="muted">Visão geral</span><h1>Dashboard</h1></div><div id="dash">Carregando...</div>`;
+ $("main").innerHTML=`<div class="page-title"><div><span class="muted">Visão geral</span><h1>Dashboard Executivo</h1></div><button class="btn secondary" onclick="dashboard()">Atualizar</button></div><div id="dash">Carregando...</div>`;
  let resumo=[], rel=[];
- try { resumo=(await sb.from("inventario_resumo").select("*")).data || []; } catch(e){}
- try { rel=(await sb.from("relatorio_inventario_completo").select("resultado")).data || []; } catch(e){}
+ try {
+  const [r1,r2]=await Promise.all([
+   sb.from("inventario_resumo").select("*").limit(100),
+   sb.from("relatorio_inventario_completo").select("resultado").limit(50000)
+  ]);
+  resumo=r1.data||[]; rel=r2.data||[];
+ } catch(e){}
  const count = (r)=>rel.filter(x=>x.resultado===r).length;
+ const total = rel.length || 1;
+ const concluido = count("encontrado") + count("divergente") + count("nao_cadastrado");
+ const perc = Math.round((concluido/total)*100);
  $("dash").innerHTML = `<div class="grid stats">
  ${stat("Inventários",resumo.length)}${stat("Encontrados",count("encontrado"))}${stat("Divergentes",count("divergente"))}${stat("Não cadastrados",count("nao_cadastrado"))}${stat("Restantes",count("restante"))}
- </div><section class="panel"><h2>Últimos inventários</h2><div class="table-wrap"><table><thead><tr><th>Loja</th><th>Filial</th><th>CC</th><th>Status</th><th>Progresso</th></tr></thead><tbody>${resumo.slice(0,20).map(i=>`<tr><td>${esc(i.loja??i.loja_db??"")}</td><td>${esc(i.filial??"")}</td><td>${esc(i.cc??i.centro_custo??"")}</td><td>${esc(i.status??"")}</td><td>${esc(i.percentual_concluido??i.percentual??"")} %</td></tr>`).join("")}</tbody></table></div></section>`;
+ </div><section class="panel"><div class="toolbar"><div><h2>Progresso geral</h2><p class="muted">Percentual calculado sobre registros consolidados do relatório.</p></div><strong style="font-size:2rem">${perc}%</strong></div><div class="progress-bar"><span style="width:${Math.min(100,perc)}%"></span></div></section>
+ <section class="panel"><div class="toolbar"><h2>Últimos inventários</h2><button class="btn secondary" onclick="navigate('inventarios')">Ver todos</button></div><div class="table-wrap"><table><thead><tr><th>Loja</th><th>Filial</th><th>CC</th><th>Status</th><th>Progresso</th></tr></thead><tbody>${resumo.slice(0,20).map(i=>`<tr><td>${esc(i.loja??i.loja_db??"")}</td><td>${esc(i.filial??"")}</td><td>${esc(i.cc??i.centro_custo??"")}</td><td>${esc(i.status??"")}</td><td><div class="progress-bar"><span style="width:${Number(i.percentual_concluido??i.percentual??0)||0}%"></span></div></td></tr>`).join("")}</tbody></table></div></section>`;
 }
 function stat(t,v){return `<div class="card stat"><span class="muted">${t}</span><strong>${v??0}</strong></div>`}
 async function bens(){
@@ -145,13 +236,14 @@ async function importFile(){
  $("impOut").innerHTML = error?`<p class="error">${esc(error.message)}</p>`:`<p class="ok">${normalized.length} bens importados/atualizados.</p>`;
 }
 async function inventarios(){
- $("main").innerHTML=`<div class="page-title"><span class="muted">Inventários</span><h1>Gestão de Inventários</h1></div>
- <div class="tabs"><button class="active" onclick="invTab('lista')">Inventários</button><button onclick="invTab('criar')">Criar inventário</button><button onclick="invTab('rel')">Relatórios</button></div><div id="invArea"></div>`;
+ $("main").innerHTML=`<div class="page-title"><div><span class="muted">Inventários</span><h1>Central de Inventários</h1></div><button class="btn success" onclick="invTab('criar')">+ Novo inventário</button></div>
+ <div class="tabs"><button class="active" onclick="invTab('lista')">Inventários ativos</button><button onclick="invTab('criar')">Criar inventário</button><button onclick="invTab('rel')">Relatórios</button></div><div id="invArea"></div>`;
  invTab("lista");
 }
 async function invTab(tab){
  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
- if(event?.target) event.target.classList.add("active");
+ const labels={lista:"Inventários ativos",criar:"Criar inventário",rel:"Relatórios"};
+ document.querySelectorAll(".tabs button").forEach(b=>{if(b.textContent===labels[tab]) b.classList.add("active")});
  if(tab==="lista") return loadInventariosList();
  if(tab==="criar") return renderCreateInventory("invArea");
  if(tab==="rel") return renderReports();
@@ -164,13 +256,18 @@ async function loadInventariosList(){
  $("invArea").innerHTML="Carregando...";
  const {data,error}=await loadInventarios();
  if(error) return $("invArea").innerHTML=`<p class="error">${esc(error.message)}</p>`;
- $("invArea").innerHTML=`<section class="panel"><div class="table-wrap"><table><thead><tr><th>Loja</th><th>Filial</th><th>CC</th><th>Status</th><th>Criado em</th><th>Ações</th></tr></thead><tbody>${data.map(i=>`<tr><td>${esc(i.loja??"")}</td><td>${esc(i.filial??"")}</td><td>${esc(i.cc??i.centro_custo??"")}</td><td>${esc(i.status??"")}</td><td>${esc(new Date(i.created_at).toLocaleString("pt-BR"))}</td><td><button class="btn secondary" onclick="exportReport('${i.id}','pdf')">PDF</button> <button class="btn secondary" onclick="exportReport('${i.id}','xlsx')">Excel</button> <button class="btn danger" onclick="deleteInv('${i.id}')">Excluir</button></td></tr>`).join("")}</tbody></table></div></section>`;
+ $("invArea").innerHTML=`<section class="panel"><div class="toolbar"><div><h2>Inventários</h2><p class="muted">Acompanhe, exporte ou exclua inventários. A exclusão remove leituras vinculadas.</p></div><input id="invSearch" placeholder="Filtrar loja, filial ou CC" oninput="filterInventoryCards()"></div></section><div class="inventory-card-grid" id="invCards">${data.map(i=>inventoryCard(i)).join("")}</div>`;
 }
+function inventoryCard(i){
+ const pct=Number(i.percentual_concluido??i.percentual??0)||0;
+ return `<article class="inventory-card" data-search="${esc(`${i.loja??""} ${i.filial??""} ${i.cc??i.centro_custo??""} ${i.status??""}`.toLowerCase())}"><header><div><h3>Loja ${esc(i.loja??"")}</h3><span class="muted">${esc(i.setor||i.descricao||"Inventário patrimonial")}</span></div><span class="pill ${i.status==='finalizado'?'encontrado':''}">${esc(i.status??"aberto")}</span></header><div class="inventory-meta"><div><span>Filial</span><strong>${esc(i.filial??"")}</strong></div><div><span>Centro de custo</span><strong>${esc(i.cc??i.centro_custo??"")}</strong></div><div><span>Responsável</span><strong>${esc(i.responsavel_nome??"Equipe")}</strong></div><div><span>Criado em</span><strong>${i.created_at?esc(new Date(i.created_at).toLocaleDateString("pt-BR")):"-"}</strong></div></div><div><div class="toolbar"><small class="muted">Progresso</small><strong>${pct}%</strong></div><div class="progress-bar"><span style="width:${Math.min(100,pct)}%"></span></div></div><div class="inventory-actions"><button class="btn secondary" onclick="exportReport('${i.id}','pdf')">PDF</button><button class="btn secondary" onclick="exportReport('${i.id}','xlsx')">Excel</button><button class="btn danger" onclick="deleteInv('${i.id}')">Excluir inventário</button></div></article>`;
+}
+function filterInventoryCards(){const q=($("invSearch")?.value||"").toLowerCase();document.querySelectorAll("#invCards .inventory-card").forEach(c=>c.style.display=c.dataset.search.includes(q)?"grid":"none");}
 async function renderCreateInventory(targetId, mobile=false){
- const target=$(targetId); target.innerHTML=`<section class="panel"><h2>Criar inventário</h2><div id="opcoes">Carregando filiais...</div></section>`;
+ const target=$(targetId); target.innerHTML=`<section class="panel create-inventory-pro"><div><h2>Criar inventário</h2><p class="muted">Selecione a combinação oficial de loja, filial e centro de custo vinda da tabela filiais.</p><div id="opcoes">Carregando filiais...</div></div><aside class="create-preview"><span class="login-badge">Novo inventário</span><h2>Fluxo profissional</h2><p>Depois de criado, o inventário aparece imediatamente no mobile para coleta por scanner ou digitação manual.</p><ul><li>Loja, filial e CC padronizados</li><li>Relatório consolidado</li><li>Exportação PDF/Excel</li></ul></aside></section>`;
  let ops=(await sb.from("inventario_opcoes_filiais").select("*").order("loja")).data;
  if(!ops) ops=(await sb.from("filiais").select("id,loja,filial,cc,descricao,cidade,estado").order("loja")).data || [];
- target.querySelector("#opcoes").innerHTML = `<div class="form"><label>Loja / Filial / CC<select id="${mobile?'mobInvOpt':'invOpt'}">${ops.map(o=>`<option value='${JSON.stringify(o).replaceAll("'","&apos;")}'>Loja ${esc(o.loja??"")} - Filial ${esc(o.filial??"")} - CC ${esc(o.cc??"")} - ${esc(o.descricao??"")}</option>`).join("")}</select></label><button class="btn success" onclick="${mobile?'createInventoryMobile()':'createInventory()'}">Criar Inventário</button></div>`;
+ target.querySelector("#opcoes").innerHTML = `<div class="form"><label>Loja / Filial / CC<select id="${mobile?'mobInvOpt':'invOpt'}">${ops.map(o=>`<option value='${JSON.stringify(o).replaceAll("'","&apos;")}'>Loja ${esc(o.loja??"")} • Filial ${esc(o.filial??"")} • CC ${esc(o.cc??"")} • ${esc(o.descricao??"")}</option>`).join("")}</select><span class="field-help">Dados carregados da tabela filiais da Supabase.</span></label><button class="btn success" onclick="${mobile?'createInventoryMobile()':'createInventory()'}">Criar Inventário</button></div>`;
 }
 async function createInventory(){await createInventoryBase("invOpt"); await loadInventariosList();}
 async function createInventoryMobile(){await createInventoryBase("mobInvOpt"); state.showCreate=false; await renderMobile();}
@@ -207,21 +304,31 @@ async function exportReport(id,type){
 async function usuarios(){ $("main").innerHTML=`<div class="page-title"><h1>Usuários</h1></div><section class="panel" id="users">Carregando...</section>`; const {data,error}=await sb.from("profiles").select("*").order("created_at",{ascending:false}); if(error)return $("users").innerHTML=`<p class=error>${esc(error.message)}</p>`; $("users").innerHTML=`<div class=table-wrap><table><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th></tr></thead><tbody>${data.map(u=>`<tr><td>${esc(u.nome)}</td><td>${esc(u.email)}</td><td>${esc(u.role||u.papel||u.perfil)}</td><td>${esc(u.status)}</td></tr>`).join("")}</tbody></table></div>`;}
 function config(){ $("main").innerHTML=`<div class="page-title"><h1>Configurações</h1></div><section class="panel"><p>Supabase conectado: ${esc(window.SUPABASE_URL)}</p></section>`; }
 async function renderMobile(){
- $("app").innerHTML=`<main class="mobile"><div class="mobile-head"><div><span style="color:#37b6a6;font-weight:900">PATRIMÔNIO MOBILE</span><br><strong>${esc(state.profile?.nome||state.user.email)}</strong></div>${isAdmin()?`<button class="btn secondary" onclick="navigate('dashboard')">← Voltar</button>`:""}</div>
- <section class="panel"><div class="row"><select id="mobInv" onchange="selectMobInv()"></select><button class="btn success" onclick="showCreateMobile()">+ Criar Inventário</button></div></section>
- <div id="mobileCreate"></div>
- <section class="scan-box"><button class="scan-button" onclick="startScan()">▣ Ler Plaqueta</button></section>
- <section class="panel"><div class="row"><input id="manualPlaqueta" placeholder="Digitar plaqueta"><button class="btn secondary" onclick="saveReading()">Salvar</button></div><div id="mobMsg"></div></section>
- <section class="panel"><strong id="lastStatus">AGUARDANDO LEITURA</strong><p id="lastDetail">Câmera ou digitação manual disponível.</p></section>
- <section><h3>Últimas leituras</h3><div class="recent" id="recent"></div></section>
- <div class="mobile-actions"><button class="btn success" onclick="nextReading()">Próxima</button><button class="btn danger" onclick="finishMobile()">Finalizar</button></div></main>`;
- await loadMobileInventories(); renderInstallButton();
+ $("app").innerHTML=`<main class="mobile"><div class="mobile-shell"><div class="mobile-head"><div><span style="color:#37b6a6;font-weight:900;letter-spacing:.06em">PATRIMÔNIO MOBILE</span><br><strong>${esc(state.profile?.nome||state.user.email)}</strong></div>${isAdmin()?`<button class="btn secondary" onclick="navigate('dashboard')">← Painel</button>`:""}</div>
+ <section class="mobile-hero"><span class="small">Inventário em campo</span><h1>Coleta de plaquetas</h1><p class="muted">Selecione ou crie um inventário, leia a plaqueta e acompanhe o progresso em tempo real.</p></section>
+ <section class="mobile-card"><label>Inventário ativo<select id="mobInv" onchange="selectMobInv()"></select></label><div class="quick-actions" style="margin-top:10px"><button class="btn success" onclick="showCreateMobile()">+ Criar Inventário</button><button class="btn secondary" onclick="loadMobileInventories()">Atualizar</button></div><div id="mobileCreate" class="mobile-create-panel"></div></section>
+ <section class="mobile-card"><div class="mobile-progress"><div><strong id="mpTotal">0</strong><span>Total</span></div><div><strong id="mpOk">0</strong><span>Encontrados</span></div><div><strong id="mpDiv">0</strong><span>Diverg.</span></div><div><strong id="mpRest">0</strong><span>Rest.</span></div></div></section>
+ <section class="scan-box"><button class="mobile-fab-scan" onclick="startScan()">▣ Ler Plaqueta</button></section>
+ <section class="mobile-card"><div class="mobile-manual-row"><input id="manualPlaqueta" placeholder="Digitar plaqueta"><button class="btn secondary" onclick="saveReading()">Salvar</button></div><div id="mobMsg"></div></section>
+ <section class="mobile-card mobile-status"><strong id="lastStatus">AGUARDANDO LEITURA</strong><p id="lastDetail" class="muted">Câmera ou digitação manual disponível.</p></section>
+ <section><h3>Últimas leituras</h3><div class="recent" id="recent"></div></section></div>
+ <nav class="mobile-bottom-nav"><button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})">Início</button><button onclick="startScan()">Scanner</button><button onclick="showCreateMobile()">Criar</button><button onclick="finishMobile()">Finalizar</button></nav></main>`;
+ await loadMobileInventories(); renderInstallButton(); await updateMobileProgress();
 }
 async function loadMobileInventories(){
  const {data}=await loadInventarios(); const sel=$("mobInv"); sel.innerHTML=(data||[]).map(i=>`<option value="${i.id}">Loja ${esc(i.loja??"")} - Filial ${esc(i.filial??"")} - CC ${esc(i.cc??i.centro_custo??"")}</option>`).join("");
- state.currentInventory=data?.[0]||null; await loadRecent();
+ state.currentInventory=data?.[0]||null; await loadRecent(); await updateMobileProgress();
 }
-function selectMobInv(){state.currentInventory=state.inventories.find(i=>i.id===$("mobInv").value); loadRecent();}
+async function updateMobileProgress(){
+ if(!state.currentInventory) return;
+ const {data}=await sb.from("relatorio_inventario_completo").select("resultado").eq("inventario_id",state.currentInventory.id).limit(50000);
+ const rows=data||[]; const c=r=>rows.filter(x=>x.resultado===r).length;
+ if($("mpTotal")) $("mpTotal").textContent=String(rows.length);
+ if($("mpOk")) $("mpOk").textContent=String(c("encontrado"));
+ if($("mpDiv")) $("mpDiv").textContent=String(c("divergente"));
+ if($("mpRest")) $("mpRest").textContent=String(c("restante"));
+}
+function selectMobInv(){state.currentInventory=state.inventories.find(i=>i.id===$("mobInv").value); loadRecent(); updateMobileProgress();}
 function showCreateMobile(){state.showCreate=true; renderCreateInventory("mobileCreate",true);}
 async function saveReading(value){
  const plaqueta=(value||$("manualPlaqueta").value||"").trim(); if(!plaqueta)return;
@@ -233,7 +340,7 @@ async function saveReading(value){
  $("lastStatus").innerHTML=`<span class="pill ${res}">${esc(res)}</span>`;
  $("lastDetail").textContent=`Plaqueta ${plaqueta} registrada.`;
  $("manualPlaqueta").value=""; $("mobMsg").innerHTML=`<p class=ok>Leitura salva.</p>`;
- loadRecent();
+ loadRecent(); updateMobileProgress();
 }
 async function loadRecent(){
  if(!state.currentInventory || !$("recent"))return;
