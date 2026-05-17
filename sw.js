@@ -1,4 +1,4 @@
-const CACHE_NAME = "inventario-patrimonial-pwa-v12";
+const CACHE_NAME = "inventario-patrimonial-pwa-v13";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -8,9 +8,10 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
-    )
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+      .then(() => self.clients.matchAll({ type: "window" }))
+      .then((clients) => clients.forEach((client) => client.navigate(client.url).catch(() => undefined)))
   );
   self.clients.claim();
 });
@@ -18,10 +19,29 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const request = event.request;
+
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request, { cache: "no-store" })
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put("/", copy)).catch(() => undefined);
+          return response;
+        })
+        .catch(() => caches.match("/"))
+    );
+    return;
+  }
+
   event.respondWith(
-    fetch(request).catch(() => {
-      if (request.mode === "navigate") return caches.match("/");
-      return caches.match(request).then((cached) => cached || caches.match("/"));
-    })
+    fetch(request)
+      .then((response) => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)).catch(() => undefined);
+        }
+        return response;
+      })
+      .catch(() => caches.match(request).then((cached) => cached || caches.match("/")))
   );
 });
