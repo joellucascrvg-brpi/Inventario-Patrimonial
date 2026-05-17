@@ -1,25 +1,15 @@
 {
-  "name": "Patrimônio Mobile",
+  "name": "Inventário Patrimonial Mobile",
   "short_name": "Patrimônio",
-  "description": "Inventário patrimonial corporativo online com leitura de plaquetas.",
+  "description": "Inventário patrimonial corporativo com leitura de plaquetas.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0B0B0F",
-  "theme_color": "#0B0B0F",
+  "background_color": "#0b0b0f",
+  "theme_color": "#10233f",
   "orientation": "portrait",
   "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "scope": "/"
+    {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
 }

@@ -1,8 +1,8 @@
-const CACHE_NAME = "patrimonio-mobile-v2";
-const APP_SHELL = ["/", "/mobile", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
+const CACHE_NAME = "inventario-patrimonial-pwa-v12";
+const APP_SHELL = ["/", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL).catch(() => undefined)));
   self.skipWaiting();
 });
 
@@ -17,7 +17,11 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const request = event.request;
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request).then((cached) => cached || caches.match("/")))
+    fetch(request).catch(() => {
+      if (request.mode === "navigate") return caches.match("/");
+      return caches.match(request).then((cached) => cached || caches.match("/"));
+    })
   );
 });
