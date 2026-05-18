@@ -1,4 +1,4 @@
-const CACHE_NAME = "inventario-patrimonial-pwa-v15";
+const CACHE_NAME = "inventario-patrimonial-pwa-v14";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -19,12 +19,6 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const request = event.request;
-
-  let requestUrl;
-  try { requestUrl = new URL(request.url); } catch (_) { requestUrl = null; }
-  if (requestUrl && (requestUrl.hostname.endsWith("supabase.co") || requestUrl.hostname.endsWith("supabase.in"))) {
-    return;
-  }
 
   if (request.mode === "navigate") {
     event.respondWith(
