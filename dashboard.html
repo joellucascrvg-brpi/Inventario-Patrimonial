@@ -275,16 +275,17 @@
       } catch { return "—"; }
     }
 
-    function kpiCard({ label, value, sub, accent = "teal", icon, emBreve = false }) {
+    function kpiCard({ label, value, sub, accent = "teal", icon, emBreve = false, sparkId = null, sparkColor = null }) {
       const accents = {
-        teal: { bg: "bg-[#e8f4f2]", text: "text-[#0d6e60]" },
-        navy: { bg: "bg-[#dde7f5]", text: "text-[#10233f]" },
-        green: { bg: "bg-[#dff7eb]", text: "text-[#126b3f]" },
-        orange: { bg: "bg-[#fff1d7]", text: "text-[#8a4c00]" },
-        red: { bg: "bg-[#ffe2e2]", text: "text-[#9b1c1c]" },
+        teal: { bg: "bg-[#e8f4f2]", text: "text-[#0d6e60]", spark: "#37b6a6" },
+        navy: { bg: "bg-[#dde7f5]", text: "text-[#10233f]", spark: "#10233f" },
+        green: { bg: "bg-[#dff7eb]", text: "text-[#126b3f]", spark: "#10b981" },
+        orange: { bg: "bg-[#fff1d7]", text: "text-[#8a4c00]", spark: "#f59e0b" },
+        red: { bg: "bg-[#ffe2e2]", text: "text-[#9b1c1c]", spark: "#dc2626" },
       };
       const a = accents[accent] || accents.teal;
-      return `<div class="card p-5 fade-in ${emBreve ? "em-breve" : ""}">
+      const sc = sparkColor || a.spark;
+      return `<div class="card p-5 fade-in ${emBreve ? "em-breve" : ""}" ${sparkId ? `data-spark="${sparkId}" data-spark-color="${sc}"` : ""}>
         <div class="flex items-start justify-between gap-3 mb-3">
           <div class="kpi-icon ${a.bg} ${a.text}">${icon}</div>
           ${emBreve ? `<span class="pill pill-gray">Em breve</span>` : ""}
@@ -292,7 +293,36 @@
         <div class="kpi-value text-3xl font-bold text-[#10233f] leading-none">${value}</div>
         <div class="text-sm font-semibold text-[#10233f] mt-2">${label}</div>
         ${sub ? `<div class="text-xs text-[#607086] mt-1">${sub}</div>` : ""}
+        ${sparkId ? `<div class="h-10 mt-3 -mx-1"><canvas id="spark-${sparkId}"></canvas></div>` : ""}
       </div>`;
+    }
+
+    function renderSparkline(canvasId, data, color) {
+      const el = document.getElementById(canvasId);
+      if (!el) return;
+      if (charts[canvasId]) charts[canvasId].destroy();
+      charts[canvasId] = new Chart(el, {
+        type: "line",
+        data: {
+          labels: data.map((_, i) => i),
+          datasets: [{
+            data,
+            borderColor: color,
+            backgroundColor: color + "22",
+            borderWidth: 1.8,
+            tension: .35,
+            pointRadius: 0,
+            fill: true,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+          scales: { x: { display: false }, y: { display: false, beginAtZero: true } },
+          animation: { duration: 600 },
+        },
+      });
     }
 
     const icons = {
@@ -332,18 +362,23 @@
     async function loadKPIs() {
       skeletonKPI();
 
+      const since30 = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
       const [
         invTotal,
         invAndamento,
         invConcluidos,
         invPlanejados,
         leiturasRow,
+        leiturasTrend,
+        invsCreated,
       ] = await Promise.all([
         sb.from("inventarios").select("*", { count: "exact", head: true }).is("deleted_at", null),
         sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "em_andamento").is("deleted_at", null),
         sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "finalizado").is("deleted_at", null),
         sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "planejado").is("deleted_at", null),
         sb.from("relatorio_inventario_completo").select("resultado").limit(100000),
+        sb.from("leituras").select("created_at, resultado").gte("created_at", since30).limit(50000),
+        sb.from("inventarios").select("created_at").gte("created_at", since30).is("deleted_at", null).limit(10000),
       ]);
 
       const totalInv = invTotal.count || 0;
@@ -358,16 +393,62 @@
       const pctConcluido = totalEsperado > 0 ? (totalLido / totalEsperado) * 100 : 0;
       const pctAcuracidade = totalLido > 0 ? (counts.encontrado / totalLido) * 100 : 0;
 
+      // Build 30-day trend buckets for sparklines
+      const days = 30;
+      const initBucket = () => {
+        const b = {};
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date(Date.now() - i * 24 * 3600 * 1000);
+          b[d.toISOString().slice(0, 10)] = 0;
+        }
+        return b;
+      };
+      const trendEnc = initBucket();
+      const trendDiv = initBucket();
+      const trendNcad = initBucket();
+      const trendAcu = initBucket();
+      const trendInv = initBucket();
+      (leiturasTrend.data || []).forEach(r => {
+        const k = (r.created_at || "").slice(0, 10);
+        if (r.resultado === "encontrado" && k in trendEnc) trendEnc[k]++;
+        else if (r.resultado === "divergente" && k in trendDiv) trendDiv[k]++;
+        else if (r.resultado === "nao_cadastrado" && k in trendNcad) trendNcad[k]++;
+      });
+      // Acuracidade por dia: encontrados / (encontrados + divergentes + nao_cadastrados)
+      Object.keys(trendAcu).forEach(k => {
+        const lido = trendEnc[k] + trendDiv[k] + trendNcad[k];
+        trendAcu[k] = lido > 0 ? (trendEnc[k] / lido) * 100 : 0;
+      });
+      (invsCreated.data || []).forEach(r => {
+        const k = (r.created_at || "").slice(0, 10);
+        if (k in trendInv) trendInv[k]++;
+      });
+
+      const arrEnc = Object.values(trendEnc);
+      const arrDiv = Object.values(trendDiv);
+      const arrNcad = Object.values(trendNcad);
+      const arrAcu = Object.values(trendAcu);
+      const arrInv = Object.values(trendInv);
+
       const grid = document.getElementById("kpi-grid");
       grid.innerHTML =
-        kpiCard({ label: "Inventários totais", value: formatNumber(totalInv), sub: `${planejados} planejados, ${andamento} em andamento`, accent: "navy", icon: icons.box }) +
+        kpiCard({ label: "Inventários totais", value: formatNumber(totalInv), sub: `${planejados} planejados, ${andamento} em andamento`, accent: "navy", icon: icons.box, sparkId: "inv" }) +
         kpiCard({ label: "Em andamento", value: formatNumber(andamento), sub: "Inventários ativos agora", accent: "teal", icon: icons.play }) +
         kpiCard({ label: "Concluídos", value: formatNumber(concluidos), sub: "Finalizados no histórico", accent: "green", icon: icons.check }) +
         kpiCard({ label: "% concluído (geral)", value: formatPercent(pctConcluido), sub: `${formatNumber(totalLido)} de ${formatNumber(totalEsperado)} bens`, accent: "teal", icon: icons.bar }) +
-        kpiCard({ label: "Encontrados", value: formatNumber(counts.encontrado), sub: "Leituras conformes", accent: "green", icon: icons.check }) +
-        kpiCard({ label: "Divergentes", value: formatNumber(counts.divergente), sub: "Necessitam revisão", accent: "orange", icon: icons.warn }) +
-        kpiCard({ label: "Não cadastrados", value: formatNumber(counts.nao_cadastrado), sub: "Plaquetas fora da base", accent: "red", icon: icons.x }) +
-        kpiCard({ label: "Acuracidade", value: formatPercent(pctAcuracidade), sub: "Encontrados / total lido", accent: "teal", icon: icons.target });
+        kpiCard({ label: "Encontrados", value: formatNumber(counts.encontrado), sub: "Leituras conformes (30d)", accent: "green", icon: icons.check, sparkId: "enc" }) +
+        kpiCard({ label: "Divergentes", value: formatNumber(counts.divergente), sub: "Necessitam revisão (30d)", accent: "orange", icon: icons.warn, sparkId: "div" }) +
+        kpiCard({ label: "Não cadastrados", value: formatNumber(counts.nao_cadastrado), sub: "Plaquetas fora da base (30d)", accent: "red", icon: icons.x, sparkId: "ncad" }) +
+        kpiCard({ label: "Acuracidade", value: formatPercent(pctAcuracidade), sub: "Encontrados / total lido (30d)", accent: "teal", icon: icons.target, sparkId: "acu" });
+
+      // Render sparklines after DOM update
+      requestAnimationFrame(() => {
+        renderSparkline("spark-inv", arrInv, "#10233f");
+        renderSparkline("spark-enc", arrEnc, "#10b981");
+        renderSparkline("spark-div", arrDiv, "#f59e0b");
+        renderSparkline("spark-ncad", arrNcad, "#dc2626");
+        renderSparkline("spark-acu", arrAcu, "#37b6a6");
+      });
 
       document.getElementById("last-sync").textContent = formatDateTime(new Date());
     }
