@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#10233f" />
+  <title>Dashboard Executivo - Patrimônio</title>
+  <link rel="icon" href="/icon.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --navy: #10233f;
+      --teal: #37b6a6;
+      --bg: #f5f7fb;
+      --text: #172033;
+      --muted: #607086;
+      --line: #e7edf5;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --red: #dc2626;
+    }
+    html, body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { background: var(--bg); color: var(--text); }
+    .nav-link { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:8px; color:#dce6f5; min-height:44px; text-decoration:none; transition:background .15s; }
+    .nav-link:hover, .nav-link.active { background: rgba(255,255,255,.12); color:#fff; }
+    .nav-link svg { width:18px; height:18px; flex-shrink:0; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 4px 14px rgba(16,35,63,.04); transition: transform .2s, box-shadow .2s; }
+    .card:hover { transform: translateY(-2px); box-shadow:0 10px 24px rgba(16,35,63,.08); }
+    .kpi-icon { width:40px; height:40px; border-radius:10px; display:grid; place-items:center; }
+    .skeleton { background: linear-gradient(90deg, #e7edf5 25%, #f5f7fb 50%, #e7edf5 75%); background-size:200% 100%; animation: shimmer 1.5s infinite; border-radius:6px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation: fadeIn .35s ease-out both; }
+    .pill { display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font-size:.72rem; font-weight:700; letter-spacing:.02em; text-transform:uppercase; }
+    .pill-green { background:#dff7eb; color:#126b3f; }
+    .pill-orange { background:#fff1d7; color:#8a4c00; }
+    .pill-red { background:#ffe2e2; color:#9b1c1c; }
+    .pill-gray { background:#edf2f7; color:#35445a; }
+    .em-breve { background: repeating-linear-gradient(45deg, #f8fafc, #f8fafc 6px, #eef2f7 6px, #eef2f7 12px); }
+    .em-breve .kpi-value { color: #9aa5b8 !important; }
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); position: fixed; z-index: 40; }
+      .sidebar.open { transform: translateX(0); }
+      .main-pad { padding-left: 16px !important; }
+      .backdrop.open { display: block; }
+    }
+    .backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:35; }
+  </style>
+</head>
+<body>
+  <div class="flex min-h-screen">
+    <aside class="sidebar w-[240px] bg-[#10233f] text-white flex flex-col p-5 gap-5 transition-transform">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-10 h-10 rounded-lg bg-[#37b6a6] text-[#10233f] font-extrabold grid place-items-center">IP</div>
+        <div>
+          <strong class="block text-sm">Patrimônio</strong>
+          <span class="block text-[11px] text-[#b9c5d6]">Dashboard Executivo</span>
+        </div>
+      </div>
+      <nav class="flex flex-col gap-1.5">
+        <a href="#" class="nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
+          Dashboard
+        </a>
+        <a href="/" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
+          Inventários
+        </a>
+        <a href="#divergencias" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86 2 19a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
+          Divergências
+        </a>
+        <a href="#" class="nav-link opacity-50 cursor-not-allowed" title="Em breve">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          Transferências
+        </a>
+        <a href="/" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+          Mobile
+        </a>
+        <a href="#" class="nav-link opacity-50 cursor-not-allowed" title="Em breve">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          Relatórios
+        </a>
+      </nav>
+      <div class="mt-auto pt-4 border-t border-white/15">
+        <div class="text-[11px] text-[#b9c5d6] mb-1">Usuário logado</div>
+        <div class="text-sm font-semibold" id="user-name">—</div>
+        <div class="text-[11px] text-[#b9c5d6]" id="user-email">—</div>
+      </div>
+    </aside>
+    <div class="backdrop" onclick="toggleSidebar()"></div>
+
+    <main class="flex-1 main-pad p-6 lg:p-8 max-w-full overflow-x-hidden">
+      <header class="flex items-center justify-between gap-4 mb-6 flex-wrap">
+        <div class="flex items-center gap-3">
+          <button class="md:hidden p-2 rounded-lg bg-white border border-slate-200" onclick="toggleSidebar()" aria-label="Abrir menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Visão Geral</div>
+            <h1 class="text-2xl font-bold text-[#10233f] m-0">Dashboard Executivo</h1>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+          <div class="text-xs text-[#607086] hidden md:block">
+            Última atualização<br><span id="last-sync" class="font-semibold text-[#10233f]">—</span>
+          </div>
+          <button onclick="loadAll()" class="px-4 h-11 rounded-lg bg-[#10233f] text-white font-bold text-sm hover:bg-[#1a3554] transition">Atualizar</button>
+          <a href="/" class="px-4 h-11 rounded-lg bg-white border border-slate-300 text-[#10233f] font-bold text-sm hover:bg-slate-50 transition inline-flex items-center">← Voltar ao App</a>
+        </div>
+      </header>
+
+      <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="kpi-grid">
+        <!-- KPI cards injetados via JS -->
+      </section>
+
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <div class="card p-5 lg:col-span-2 fade-in">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Atividade</div>
+              <h2 class="text-base font-bold m-0">Leituras por dia (últimos 30 dias)</h2>
+            </div>
+            <span class="pill pill-gray" id="leituras-total-pill">—</span>
+          </div>
+          <div class="relative h-72">
+            <canvas id="chart-leituras"></canvas>
+          </div>
+        </div>
+        <div class="card p-5 fade-in">
+          <div class="mb-4">
+            <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Inventários</div>
+            <h2 class="text-base font-bold m-0">Por status</h2>
+          </div>
+          <div class="relative h-72">
+            <canvas id="chart-status"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="divergencias" class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div class="card p-5 fade-in">
+          <div class="mb-4">
+            <div class="text-[11px] uppercase tracking-wider text-[#f59e0b] font-bold">Divergências</div>
+            <h2 class="text-base font-bold m-0">Top 10 lojas com mais divergências</h2>
+          </div>
+          <div class="relative h-80">
+            <canvas id="chart-divergencias"></canvas>
+          </div>
+        </div>
+        <div class="card p-5 fade-in">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Acuracidade</div>
+              <h2 class="text-base font-bold m-0">Resultado das leituras</h2>
+            </div>
+          </div>
+          <div class="relative h-80">
+            <canvas id="chart-resultado"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="card p-5 mb-6 fade-in">
+        <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <div>
+            <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Tabela inteligente</div>
+            <h2 class="text-base font-bold m-0">Inventários recentes</h2>
+          </div>
+          <input type="search" id="filtro-inv" placeholder="Buscar por loja, filial ou CC..." class="border border-slate-300 rounded-lg px-3 h-10 text-sm w-full md:w-72" />
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" id="tabela-inv">
+            <thead>
+              <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider">
+                <th class="text-left p-3 font-semibold">Loja</th>
+                <th class="text-left p-3 font-semibold">Filial</th>
+                <th class="text-left p-3 font-semibold">CC</th>
+                <th class="text-left p-3 font-semibold">Status</th>
+                <th class="text-right p-3 font-semibold">Encontrados</th>
+                <th class="text-right p-3 font-semibold">Divergentes</th>
+                <th class="text-right p-3 font-semibold">% Lido</th>
+                <th class="text-left p-3 font-semibold">Iniciado em</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-inv-body">
+              <tr><td colspan="8" class="p-6 text-center text-slate-400">Carregando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="card em-breve p-5">
+          <div class="text-[11px] uppercase tracking-wider text-[#9aa5b8] font-bold mb-1">Em breve</div>
+          <h3 class="font-bold m-0">Ranking de inventariadores</h3>
+          <p class="text-xs text-[#9aa5b8] mt-1 mb-0">Requer coluna user_id em leituras</p>
+        </div>
+        <div class="card em-breve p-5">
+          <div class="text-[11px] uppercase tracking-wider text-[#9aa5b8] font-bold mb-1">Em breve</div>
+          <h3 class="font-bold m-0">Transferências pendentes</h3>
+          <p class="text-xs text-[#9aa5b8] mt-1 mb-0">Requer tabela transferencias</p>
+        </div>
+        <div class="card em-breve p-5">
+          <div class="text-[11px] uppercase tracking-wider text-[#9aa5b8] font-bold mb-1">Em breve</div>
+          <h3 class="font-bold m-0">Bens sem responsável</h3>
+          <p class="text-xs text-[#9aa5b8] mt-1 mb-0">Requer tabela bens com responsavel_id</p>
+        </div>
+      </section>
+
+      <footer class="text-center text-xs text-[#607086] py-4">
+        Dashboard executivo · MVP · Dados em tempo real do Supabase
+      </footer>
+    </main>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+
+    const SUPABASE_URL = "https://mclhbshxemzidqsiiohe.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_w3jCEOyD-0NF1eEy6gUL_g_LCsleMWC";
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const charts = {};
+
+    window.toggleSidebar = function() {
+      document.querySelector(".sidebar").classList.toggle("open");
+      document.querySelector(".backdrop").classList.toggle("open");
+    };
+
+    function formatNumber(n) {
+      return new Intl.NumberFormat("pt-BR").format(n || 0);
+    }
+    function formatPercent(n) {
+      return (n || 0).toFixed(1).replace(".", ",") + "%";
+    }
+    function formatDateTime(d) {
+      try {
+        return new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date(d));
+      } catch { return "—"; }
+    }
+    function formatDate(d) {
+      try {
+        return new Intl.DateTimeFormat("pt-BR", { dateStyle: "short" }).format(new Date(d));
+      } catch { return "—"; }
+    }
+
+    function kpiCard({ label, value, sub, accent = "teal", icon, emBreve = false }) {
+      const accents = {
+        teal: { bg: "bg-[#e8f4f2]", text: "text-[#0d6e60]" },
+        navy: { bg: "bg-[#dde7f5]", text: "text-[#10233f]" },
+        green: { bg: "bg-[#dff7eb]", text: "text-[#126b3f]" },
+        orange: { bg: "bg-[#fff1d7]", text: "text-[#8a4c00]" },
+        red: { bg: "bg-[#ffe2e2]", text: "text-[#9b1c1c]" },
+      };
+      const a = accents[accent] || accents.teal;
+      return `<div class="card p-5 fade-in ${emBreve ? "em-breve" : ""}">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <div class="kpi-icon ${a.bg} ${a.text}">${icon}</div>
+          ${emBreve ? `<span class="pill pill-gray">Em breve</span>` : ""}
+        </div>
+        <div class="kpi-value text-3xl font-bold text-[#10233f] leading-none">${value}</div>
+        <div class="text-sm font-semibold text-[#10233f] mt-2">${label}</div>
+        ${sub ? `<div class="text-xs text-[#607086] mt-1">${sub}</div>` : ""}
+      </div>`;
+    }
+
+    const icons = {
+      box: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 16-3 5.4a2 2 0 0 1-1.8 1H7.8a2 2 0 0 1-1.8-1L3 16M3 16V8l3-5.4A2 2 0 0 1 7.8 1.6h8.4A2 2 0 0 1 18 2.6L21 8v8M3 8h18"/></svg>`,
+      play: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+      check: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`,
+      bar: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>`,
+      warn: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.86 2 19a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+      x: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+      sync: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`,
+      target: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+    };
+
+    async function loadUser() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session?.user) {
+        document.getElementById("user-name").textContent = session.user.user_metadata?.nome || session.user.email?.split("@")[0] || "Usuário";
+        document.getElementById("user-email").textContent = session.user.email || "—";
+      } else {
+        document.getElementById("user-name").textContent = "Visitante";
+        document.getElementById("user-email").textContent = "Faça login no app para dados personalizados";
+      }
+    }
+
+    function skeletonKPI() {
+      const grid = document.getElementById("kpi-grid");
+      grid.innerHTML = "";
+      for (let i = 0; i < 8; i++) {
+        grid.innerHTML += `<div class="card p-5">
+          <div class="skeleton h-10 w-10 rounded-lg mb-3"></div>
+          <div class="skeleton h-8 w-24 mb-2"></div>
+          <div class="skeleton h-4 w-32"></div>
+        </div>`;
+      }
+    }
+
+    async function loadKPIs() {
+      skeletonKPI();
+
+      const [
+        invTotal,
+        invAndamento,
+        invConcluidos,
+        invPlanejados,
+        leiturasRow,
+      ] = await Promise.all([
+        sb.from("inventarios").select("*", { count: "exact", head: true }).is("deleted_at", null),
+        sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "em_andamento").is("deleted_at", null),
+        sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "finalizado").is("deleted_at", null),
+        sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "planejado").is("deleted_at", null),
+        sb.from("relatorio_inventario_completo").select("resultado").limit(100000),
+      ]);
+
+      const totalInv = invTotal.count || 0;
+      const andamento = invAndamento.count || 0;
+      const concluidos = invConcluidos.count || 0;
+      const planejados = invPlanejados.count || 0;
+
+      const counts = { encontrado: 0, divergente: 0, nao_cadastrado: 0, restante: 0 };
+      (leiturasRow.data || []).forEach(r => { if (r.resultado in counts) counts[r.resultado] += 1; });
+      const totalEsperado = counts.encontrado + counts.divergente + counts.nao_cadastrado + counts.restante;
+      const totalLido = counts.encontrado + counts.divergente + counts.nao_cadastrado;
+      const pctConcluido = totalEsperado > 0 ? (totalLido / totalEsperado) * 100 : 0;
+      const pctAcuracidade = totalLido > 0 ? (counts.encontrado / totalLido) * 100 : 0;
+
+      const grid = document.getElementById("kpi-grid");
+      grid.innerHTML =
+        kpiCard({ label: "Inventários totais", value: formatNumber(totalInv), sub: `${planejados} planejados, ${andamento} em andamento`, accent: "navy", icon: icons.box }) +
+        kpiCard({ label: "Em andamento", value: formatNumber(andamento), sub: "Inventários ativos agora", accent: "teal", icon: icons.play }) +
+        kpiCard({ label: "Concluídos", value: formatNumber(concluidos), sub: "Finalizados no histórico", accent: "green", icon: icons.check }) +
+        kpiCard({ label: "% concluído (geral)", value: formatPercent(pctConcluido), sub: `${formatNumber(totalLido)} de ${formatNumber(totalEsperado)} bens`, accent: "teal", icon: icons.bar }) +
+        kpiCard({ label: "Encontrados", value: formatNumber(counts.encontrado), sub: "Leituras conformes", accent: "green", icon: icons.check }) +
+        kpiCard({ label: "Divergentes", value: formatNumber(counts.divergente), sub: "Necessitam revisão", accent: "orange", icon: icons.warn }) +
+        kpiCard({ label: "Não cadastrados", value: formatNumber(counts.nao_cadastrado), sub: "Plaquetas fora da base", accent: "red", icon: icons.x }) +
+        kpiCard({ label: "Acuracidade", value: formatPercent(pctAcuracidade), sub: "Encontrados / total lido", accent: "teal", icon: icons.target });
+
+      document.getElementById("last-sync").textContent = formatDateTime(new Date());
+    }
+
+    async function loadChartLeituras() {
+      const since = new Date(Date.now() - 30 * 24 * 3600 * 1000);
+      const { data, error } = await sb
+        .from("leituras")
+        .select("created_at")
+        .gte("created_at", since.toISOString())
+        .limit(50000);
+
+      const byDay = new Map();
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(Date.now() - i * 24 * 3600 * 1000);
+        const k = d.toISOString().slice(0, 10);
+        byDay.set(k, 0);
+      }
+      (data || []).forEach(r => {
+        const k = (r.created_at || "").slice(0, 10);
+        if (byDay.has(k)) byDay.set(k, byDay.get(k) + 1);
+      });
+
+      const labels = Array.from(byDay.keys()).map(k => k.slice(5).replace("-", "/"));
+      const values = Array.from(byDay.values());
+      const total = values.reduce((a, b) => a + b, 0);
+      document.getElementById("leituras-total-pill").textContent = formatNumber(total) + " leituras";
+
+      const ctx = document.getElementById("chart-leituras");
+      if (charts.leituras) charts.leituras.destroy();
+      const gradient = ctx.getContext("2d").createLinearGradient(0, 0, 0, 280);
+      gradient.addColorStop(0, "rgba(55,182,166,.35)");
+      gradient.addColorStop(1, "rgba(55,182,166,0)");
+      charts.leituras = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: "Leituras",
+            data: values,
+            borderColor: "#37b6a6",
+            backgroundColor: gradient,
+            tension: .35,
+            fill: true,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            borderWidth: 2.5,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { mode: "index", intersect: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: "#607086", maxRotation: 0, autoSkip: true, maxTicksLimit: 8 } },
+            y: { grid: { color: "#e7edf5" }, ticks: { color: "#607086", precision: 0 } },
+          },
+        },
+      });
+    }
+
+    async function loadChartStatus() {
+      const { data } = await sb.from("inventarios").select("status").is("deleted_at", null);
+      const buckets = { planejado: 0, em_andamento: 0, finalizado: 0, outros: 0 };
+      (data || []).forEach(r => {
+        if (r.status in buckets) buckets[r.status]++;
+        else buckets.outros++;
+      });
+      const ctx = document.getElementById("chart-status");
+      if (charts.status) charts.status.destroy();
+      charts.status = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Planejados", "Em andamento", "Concluídos"].concat(buckets.outros ? ["Outros"] : []),
+          datasets: [{
+            data: [buckets.planejado, buckets.em_andamento, buckets.finalizado].concat(buckets.outros ? [buckets.outros] : []),
+            backgroundColor: ["#94a3b8", "#37b6a6", "#10b981", "#cbd5e1"],
+            borderWidth: 0,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "65%",
+          plugins: { legend: { position: "bottom", labels: { color: "#35445a", padding: 12, font: { size: 12 } } } },
+        },
+      });
+    }
+
+    async function loadChartDivergencias() {
+      const { data } = await sb
+        .from("relatorio_inventario_completo")
+        .select("loja, resultado")
+        .eq("resultado", "divergente")
+        .limit(50000);
+
+      const byLoja = new Map();
+      (data || []).forEach(r => {
+        const k = `Loja ${r.loja ?? "—"}`;
+        byLoja.set(k, (byLoja.get(k) || 0) + 1);
+      });
+      const top = Array.from(byLoja.entries()).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+      const ctx = document.getElementById("chart-divergencias");
+      if (charts.divergencias) charts.divergencias.destroy();
+      charts.divergencias = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: top.map(([k]) => k.length > 28 ? k.slice(0, 26) + "…" : k),
+          datasets: [{
+            label: "Divergências",
+            data: top.map(([, v]) => v),
+            backgroundColor: "#f59e0b",
+            borderRadius: 6,
+          }],
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: "#e7edf5" }, ticks: { color: "#607086", precision: 0 } },
+            y: { grid: { display: false }, ticks: { color: "#35445a", font: { size: 11 } } },
+          },
+        },
+      });
+    }
+
+    async function loadChartResultado() {
+      const { data } = await sb.from("relatorio_inventario_completo").select("resultado").limit(100000);
+      const buckets = { encontrado: 0, divergente: 0, nao_cadastrado: 0, restante: 0 };
+      (data || []).forEach(r => { if (r.resultado in buckets) buckets[r.resultado]++; });
+      const ctx = document.getElementById("chart-resultado");
+      if (charts.resultado) charts.resultado.destroy();
+      charts.resultado = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Encontrados", "Divergentes", "Não cadastrados", "Restantes"],
+          datasets: [{
+            data: [buckets.encontrado, buckets.divergente, buckets.nao_cadastrado, buckets.restante],
+            backgroundColor: ["#10b981", "#f59e0b", "#dc2626", "#cbd5e1"],
+            borderWidth: 0,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "65%",
+          plugins: { legend: { position: "bottom", labels: { color: "#35445a", padding: 12, font: { size: 12 } } } },
+        },
+      });
+    }
+
+    async function loadTabelaInv() {
+      const { data: invs } = await sb
+        .from("inventarios")
+        .select("id, loja, filial, cc, status, data_inicio, created_at")
+        .is("deleted_at", null)
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      const { data: rel } = await sb
+        .from("relatorio_inventario_completo")
+        .select("inventario_id, resultado")
+        .in("inventario_id", (invs || []).map(i => i.id))
+        .limit(100000);
+
+      const stats = new Map();
+      (rel || []).forEach(r => {
+        const s = stats.get(r.inventario_id) || { encontrado: 0, divergente: 0, nao_cadastrado: 0, restante: 0 };
+        if (r.resultado in s) s[r.resultado]++;
+        stats.set(r.inventario_id, s);
+      });
+
+      window.__allInv = (invs || []).map(inv => {
+        const s = stats.get(inv.id) || { encontrado: 0, divergente: 0, nao_cadastrado: 0, restante: 0 };
+        const total = s.encontrado + s.divergente + s.nao_cadastrado + s.restante;
+        const lido = s.encontrado + s.divergente + s.nao_cadastrado;
+        return { ...inv, encontrado: s.encontrado, divergente: s.divergente, pct: total ? (lido / total) * 100 : 0 };
+      });
+
+      renderTabela();
+    }
+
+    function renderTabela() {
+      const q = (document.getElementById("filtro-inv").value || "").toLowerCase().trim();
+      const rows = (window.__allInv || []).filter(r => {
+        if (!q) return true;
+        return String(r.loja).toLowerCase().includes(q)
+          || String(r.filial).toLowerCase().includes(q)
+          || String(r.cc).toLowerCase().includes(q);
+      });
+      const body = document.getElementById("tabela-inv-body");
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">Nenhum inventário encontrado</td></tr>`;
+        return;
+      }
+      body.innerHTML = rows.map(r => `
+        <tr class="border-t border-slate-100 hover:bg-slate-50 transition">
+          <td class="p-3 font-semibold">${r.loja || "—"}</td>
+          <td class="p-3">${r.filial || "—"}</td>
+          <td class="p-3">${r.cc || "—"}</td>
+          <td class="p-3"><span class="pill ${r.status === "finalizado" ? "pill-green" : r.status === "em_andamento" ? "pill-orange" : "pill-gray"}">${r.status || "—"}</span></td>
+          <td class="p-3 text-right text-[#126b3f] font-semibold">${formatNumber(r.encontrado)}</td>
+          <td class="p-3 text-right text-[#8a4c00] font-semibold">${formatNumber(r.divergente)}</td>
+          <td class="p-3 text-right font-bold">${formatPercent(r.pct)}</td>
+          <td class="p-3 text-[#607086]">${r.data_inicio ? formatDate(r.data_inicio) : (r.created_at ? formatDate(r.created_at) : "—")}</td>
+        </tr>
+      `).join("");
+    }
+
+    document.getElementById("filtro-inv").addEventListener("input", renderTabela);
+
+    async function loadAll() {
+      try {
+        await loadUser();
+        await Promise.all([
+          loadKPIs(),
+          loadChartLeituras(),
+          loadChartStatus(),
+          loadChartDivergencias(),
+          loadChartResultado(),
+          loadTabelaInv(),
+        ]);
+      } catch (e) {
+        console.error("Erro carregando dashboard:", e);
+        alert("Erro carregando dashboard: " + (e?.message || e));
+      }
+    }
+    window.loadAll = loadAll;
+    loadAll();
+
+    // Auto-refresh a cada 60s
+    setInterval(loadAll, 60000);
+  </script>
+</body>
+</html>
