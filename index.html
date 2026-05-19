@@ -90,11 +90,13 @@ html.is-offline .offline-chip{display:block}
 .exec-kpi-value{font-size:1.85rem;font-weight:800;color:#10233f;line-height:1;letter-spacing:-.01em}
 .exec-kpi-label{font-size:.88rem;font-weight:700;color:#10233f;margin-top:8px}
 .exec-kpi-sub{font-size:.74rem;color:#607086;margin-top:4px}
-.exec-card{background:#fff;border:1px solid #dbe2ed;border-radius:12px;padding:20px;box-shadow:0 4px 14px rgba(16,35,63,.04)}
+.exec-card{background:#fff;border:1px solid #dbe2ed;border-radius:12px;padding:20px;box-shadow:0 4px 14px rgba(16,35,63,.04);min-width:0;overflow:hidden}
+.exec-card>div[style*="position:relative"],.exec-card>div[style*="position: relative"]{max-width:100%;width:100%}
+.exec-card canvas{max-width:100%!important}
 .exec-card-head{margin-bottom:14px}
 .exec-card-head h2{margin:4px 0 0;font-size:1rem;font-weight:700;color:#10233f}
-.exec-charts-row{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:24px}
-.exec-charts-row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.exec-charts-row{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px;margin-bottom:24px}
+.exec-charts-row-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-bottom:24px}
 .exec-toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:22px}
 .exec-toolbar .page-title{margin-bottom:0}
 .exec-toolbar-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:relative}
