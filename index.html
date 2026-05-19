@@ -99,6 +99,60 @@ html.is-offline .offline-chip{display:block}
   update();
 })();
     </script>
+    <script>
+(function(){
+  var shown = false;
+  function showFallback(msg){
+    if (shown) return;
+    var root = document.getElementById("root");
+    if (root && root.childElementCount > 0) return;
+    shown = true;
+    var box = document.createElement("div");
+    box.id = "app-load-fallback";
+    box.style.cssText = "position:fixed;inset:0;background:#0b0b0f;color:#f8fafc;display:grid;place-items:center;padding:24px;z-index:999;font-family:system-ui,-apple-system,Segoe UI,sans-serif";
+    var inner = document.createElement("div");
+    inner.style.cssText = "text-align:center;max-width:380px;display:grid;gap:14px";
+    var h = document.createElement("h2");
+    h.textContent = "Nao foi possivel carregar o app";
+    h.style.cssText = "margin:0;font-size:1.4rem";
+    var p = document.createElement("p");
+    p.textContent = msg || "Verifique a conexao e tente novamente.";
+    p.style.cssText = "margin:0;color:#a9b4c5;line-height:1.5";
+    var btn = document.createElement("button");
+    btn.textContent = "Recarregar";
+    btn.style.cssText = "min-height:44px;padding:0 24px;background:#37b6a6;color:#06101d;border:0;border-radius:8px;font-weight:800;font-size:1rem;cursor:pointer;justify-self:center";
+    btn.addEventListener("click", function(){
+      if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+        navigator.serviceWorker.getRegistrations().then(function(regs){
+          regs.forEach(function(r){ r.unregister(); });
+          location.reload();
+        }).catch(function(){ location.reload(); });
+      } else { location.reload(); }
+    });
+    inner.appendChild(h); inner.appendChild(p); inner.appendChild(btn);
+    box.appendChild(inner);
+    (document.body || document.documentElement).appendChild(box);
+  }
+  window.addEventListener("error", function(e){
+    var root = document.getElementById("root");
+    if (root && root.childElementCount === 0) {
+      showFallback("Ocorreu um erro ao carregar o aplicativo. Toque em Recarregar para tentar novamente.");
+    }
+  });
+  window.addEventListener("unhandledrejection", function(){
+    var root = document.getElementById("root");
+    if (root && root.childElementCount === 0) {
+      showFallback("Ocorreu um erro ao carregar o aplicativo. Toque em Recarregar para tentar novamente.");
+    }
+  });
+  setTimeout(function(){
+    var root = document.getElementById("root");
+    if (root && root.childElementCount === 0) {
+      showFallback("O aplicativo demorou demais para carregar. Verifique sua conexao e toque em Recarregar.");
+    }
+  }, 12000);
+})();
+    </script>
   
     <script type="module">
 function EQ(t,e){for(var r=0;r<e.length;r++){const n=e[r];if(typeof n!="string"&&!Array.isArray(n)){for(const i in n)if(i!=="default"&&!(i in t)){const a=Object.getOwnPropertyDescriptor(n,i);a&&Object.defineProperty(t,i,a.get?a:{enumerable:!0,get:()=>n[i]})}}}return Object.freeze(Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}))}(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const i of document.querySelectorAll('link[rel="modulepreload"]'))n(i);new MutationObserver(i=>{for(const a of i)if(a.type==="childList")for(const s of a.addedNodes)s.tagName==="LINK"&&s.rel==="modulepreload"&&n(s)}).observe(document,{childList:!0,subtree:!0});function r(i){const a={};return i.integrity&&(a.integrity=i.integrity),i.referrerPolicy&&(a.referrerPolicy=i.referrerPolicy),i.crossOrigin==="use-credentials"?a.credentials="include":i.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function n(i){if(i.ep)return;i.ep=!0;const a=r(i);fetch(i.href,a)}})();var qu=typeof globalThis<"u"?globalThis:typeof window<"u"?window:typeof global<"u"?global:typeof self<"u"?self:{};function $v(t){return t&&t.__esModule&&Object.prototype.hasOwnProperty.call(t,"default")?t.default:t}function BQ(t){if(t.__esModule)return t;var e=t.default;if(typeof e=="function"){var r=function n(){return this instanceof n?Reflect.construct(e,arguments,this.constructor):e.apply(this,arguments)};r.prototype=e.prototype}else r={};return Object.defineProperty(r,"__esModule",{value:!0}),Object.keys(t).forEach(function(n){var i=Object.getOwnPropertyDescriptor(t,n);Object.defineProperty(r,n,i.get?i:{enumerable:!0,get:function(){return t[n]}})}),r}var $k={exports:{}},wy={},Wk={exports:{}},Cr={};/**
