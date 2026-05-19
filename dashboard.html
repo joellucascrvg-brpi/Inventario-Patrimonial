@@ -65,7 +65,7 @@
       </div>
       <nav class="flex flex-col">
         <div class="nav-section">Operacional</div>
-        <a href="#" class="nav-link active">
+        <a href="#dashboard" data-page="dashboard" class="nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
           Dashboard
         </a>
@@ -77,33 +77,25 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
           Mobile
         </a>
-        <a href="#" class="nav-link" aria-disabled="true" onclick="event.preventDefault()" title="Em breve">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          Transferências
-          <span class="nav-badge">Em breve</span>
-        </a>
 
         <div class="nav-section">Análise</div>
-        <a href="#divergencias" class="nav-link">
+        <a href="#dashboard?focus=divergencias" class="nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86 2 19a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
           Divergências
         </a>
-        <a href="#" class="nav-link" aria-disabled="true" onclick="event.preventDefault()" title="Em breve">
+        <a href="#relatorios" data-page="relatorios" class="nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           Relatórios
-          <span class="nav-badge">Em breve</span>
         </a>
 
         <div class="nav-section">Sistema</div>
-        <a href="#" class="nav-link" aria-disabled="true" onclick="event.preventDefault()" title="Em breve">
+        <a href="#usuarios" data-page="usuarios" class="nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           Usuários
-          <span class="nav-badge">Em breve</span>
         </a>
-        <a href="#" class="nav-link" aria-disabled="true" onclick="event.preventDefault()" title="Em breve">
+        <a href="#configuracoes" data-page="configuracoes" class="nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           Configurações
-          <span class="nav-badge">Em breve</span>
         </a>
       </nav>
       <div class="mt-auto pt-4 border-t border-white/15">
@@ -130,10 +122,10 @@
             <div class="text-xs text-[#607086] hidden md:block">
               Última atualização<br><span id="last-sync" class="font-semibold text-[#10233f]">—</span>
             </div>
-            <select id="filtro-filial" class="border border-slate-300 rounded-lg px-3 h-11 text-sm bg-white font-semibold text-[#10233f] cursor-pointer" disabled>
+            <select id="filtro-filial" class="dashboard-only border border-slate-300 rounded-lg px-3 h-11 text-sm bg-white font-semibold text-[#10233f] cursor-pointer" disabled>
               <option value="">Todas as filiais</option>
             </select>
-            <select id="filtro-periodo" class="border border-slate-300 rounded-lg px-3 h-11 text-sm bg-white font-semibold text-[#10233f] cursor-pointer">
+            <select id="filtro-periodo" class="dashboard-only border border-slate-300 rounded-lg px-3 h-11 text-sm bg-white font-semibold text-[#10233f] cursor-pointer">
               <option value="7">Últimos 7 dias</option>
               <option value="30" selected>Últimos 30 dias</option>
               <option value="90">Últimos 90 dias</option>
@@ -153,6 +145,7 @@
         </div>
       </header>
 
+      <div id="page-dashboard" class="page">
       <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="kpi-grid">
         <!-- KPI cards injetados via JS -->
       </section>
@@ -241,15 +234,201 @@
         </div>
         <div class="card em-breve p-5">
           <div class="text-[11px] uppercase tracking-wider text-[#9aa5b8] font-bold mb-1">Em breve</div>
-          <h3 class="font-bold m-0">Transferências pendentes</h3>
-          <p class="text-xs text-[#9aa5b8] mt-1 mb-0">Requer tabela transferencias</p>
-        </div>
-        <div class="card em-breve p-5">
-          <div class="text-[11px] uppercase tracking-wider text-[#9aa5b8] font-bold mb-1">Em breve</div>
           <h3 class="font-bold m-0">Bens sem responsável</h3>
           <p class="text-xs text-[#9aa5b8] mt-1 mb-0">Requer tabela bens com responsavel_id</p>
         </div>
+        <div class="card em-breve p-5">
+          <div class="text-[11px] uppercase tracking-wider text-[#9aa5b8] font-bold mb-1">Em breve</div>
+          <h3 class="font-bold m-0">Notas fiscais pendentes</h3>
+          <p class="text-xs text-[#9aa5b8] mt-1 mb-0">Requer tabela notas_fiscais</p>
+        </div>
       </section>
+      </div><!-- /#page-dashboard -->
+
+      <div id="page-relatorios" class="page" hidden>
+        <div class="card p-5 mb-4 fade-in">
+          <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Análise</div>
+              <h2 class="text-base font-bold m-0">Relatório completo de inventários</h2>
+              <p class="text-xs text-slate-500 mt-1">Lista detalhada com contadores e percentuais</p>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+              <select id="rel-status" class="border border-slate-300 rounded-lg px-3 h-10 text-sm bg-white font-semibold cursor-pointer">
+                <option value="">Todos status</option>
+                <option value="planejado">Planejado</option>
+                <option value="em_andamento">Em andamento</option>
+                <option value="finalizado">Finalizado</option>
+              </select>
+              <input id="rel-busca" type="search" placeholder="Buscar por loja, filial ou CC..." class="border border-slate-300 rounded-lg px-3 h-10 text-sm w-full md:w-72" />
+              <button id="rel-export-csv" class="px-3 h-10 rounded-lg bg-[#37b6a6] text-white text-sm font-bold inline-flex items-center gap-2 hover:bg-[#2e9d8f] transition">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Exportar CSV
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm" id="tabela-rel">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider">
+                  <th class="text-left p-3 font-semibold">Loja</th>
+                  <th class="text-left p-3 font-semibold">Filial</th>
+                  <th class="text-left p-3 font-semibold">CC</th>
+                  <th class="text-left p-3 font-semibold">Nome</th>
+                  <th class="text-left p-3 font-semibold">Status</th>
+                  <th class="text-right p-3 font-semibold">Enc.</th>
+                  <th class="text-right p-3 font-semibold">Div.</th>
+                  <th class="text-right p-3 font-semibold">Não cad.</th>
+                  <th class="text-right p-3 font-semibold">Restantes</th>
+                  <th class="text-right p-3 font-semibold">% Lido</th>
+                  <th class="text-left p-3 font-semibold">Início</th>
+                  <th class="text-left p-3 font-semibold">Fim</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-rel-body">
+                <tr><td colspan="12" class="p-6 text-center text-slate-400">Carregando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 text-xs text-slate-500" id="rel-summary"></div>
+        </div>
+      </div>
+
+      <div id="page-usuarios" class="page" hidden>
+        <div class="card p-5 mb-4 fade-in">
+          <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Sistema</div>
+              <h2 class="text-base font-bold m-0">Usuários cadastrados</h2>
+              <p class="text-xs text-slate-500 mt-1">Lista de usuários da tabela profiles</p>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+              <select id="usu-perfil" class="border border-slate-300 rounded-lg px-3 h-10 text-sm bg-white font-semibold cursor-pointer">
+                <option value="">Todos perfis</option>
+              </select>
+              <select id="usu-status" class="border border-slate-300 rounded-lg px-3 h-10 text-sm bg-white font-semibold cursor-pointer">
+                <option value="">Ativos e inativos</option>
+                <option value="ativo">Apenas ativos</option>
+                <option value="inativo">Apenas inativos</option>
+              </select>
+              <input id="usu-busca" type="search" placeholder="Buscar por nome ou email..." class="border border-slate-300 rounded-lg px-3 h-10 text-sm w-full md:w-64" />
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm" id="tabela-usu">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider">
+                  <th class="text-left p-3 font-semibold">Nome</th>
+                  <th class="text-left p-3 font-semibold">Email</th>
+                  <th class="text-left p-3 font-semibold">Perfil</th>
+                  <th class="text-left p-3 font-semibold">Loja</th>
+                  <th class="text-left p-3 font-semibold">Setor</th>
+                  <th class="text-left p-3 font-semibold">Status</th>
+                  <th class="text-left p-3 font-semibold">Cadastrado em</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-usu-body">
+                <tr><td colspan="7" class="p-6 text-center text-slate-400">Carregando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 text-xs text-slate-500" id="usu-summary"></div>
+        </div>
+      </div>
+
+      <div id="page-configuracoes" class="page" hidden>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+          <div class="card p-5 fade-in">
+            <div class="mb-4">
+              <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Visualização</div>
+              <h2 class="text-base font-bold m-0">Preferências do dashboard</h2>
+            </div>
+            <div class="flex flex-col gap-4">
+              <label class="flex justify-between items-center gap-3">
+                <div>
+                  <div class="font-semibold text-sm">Atualizar dados automaticamente</div>
+                  <div class="text-xs text-slate-500">Intervalo entre refreshes</div>
+                </div>
+                <select id="cfg-refresh" class="border border-slate-300 rounded-lg px-3 h-10 text-sm bg-white font-semibold cursor-pointer min-w-[160px]">
+                  <option value="0">Desligado</option>
+                  <option value="30000">30 segundos</option>
+                  <option value="60000" selected>1 minuto</option>
+                  <option value="120000">2 minutos</option>
+                  <option value="300000">5 minutos</option>
+                </select>
+              </label>
+              <label class="flex justify-between items-center gap-3">
+                <div>
+                  <div class="font-semibold text-sm">Período padrão dos gráficos</div>
+                  <div class="text-xs text-slate-500">Aplica ao abrir a página</div>
+                </div>
+                <select id="cfg-periodo" class="border border-slate-300 rounded-lg px-3 h-10 text-sm bg-white font-semibold cursor-pointer min-w-[160px]">
+                  <option value="7">Últimos 7 dias</option>
+                  <option value="30" selected>Últimos 30 dias</option>
+                  <option value="90">Últimos 90 dias</option>
+                  <option value="180">Últimos 6 meses</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="card p-5 fade-in">
+            <div class="mb-4">
+              <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Sessão</div>
+              <h2 class="text-base font-bold m-0">Sua conta</h2>
+            </div>
+            <div class="flex flex-col gap-3 text-sm">
+              <div class="flex justify-between border-b border-slate-100 pb-2">
+                <span class="text-slate-500">Nome</span>
+                <span id="cfg-user-name" class="font-semibold">—</span>
+              </div>
+              <div class="flex justify-between border-b border-slate-100 pb-2">
+                <span class="text-slate-500">Email</span>
+                <span id="cfg-user-email" class="font-semibold">—</span>
+              </div>
+              <div class="flex justify-between border-b border-slate-100 pb-2">
+                <span class="text-slate-500">Perfil</span>
+                <span id="cfg-user-perfil" class="font-semibold">—</span>
+              </div>
+              <button id="cfg-logout" class="mt-2 px-4 h-11 rounded-lg bg-red-50 text-red-700 font-bold text-sm hover:bg-red-100 transition border border-red-200 self-start">Sair (logout)</button>
+            </div>
+          </div>
+
+          <div class="card p-5 fade-in">
+            <div class="mb-4">
+              <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Sobre</div>
+              <h2 class="text-base font-bold m-0">O sistema</h2>
+            </div>
+            <div class="flex flex-col gap-3 text-sm">
+              <div class="flex justify-between border-b border-slate-100 pb-2">
+                <span class="text-slate-500">Aplicação</span>
+                <span class="font-semibold">Inventário Patrimonial</span>
+              </div>
+              <div class="flex justify-between border-b border-slate-100 pb-2">
+                <span class="text-slate-500">Versão dashboard</span>
+                <span class="font-semibold">v1.0</span>
+              </div>
+              <div class="flex justify-between border-b border-slate-100 pb-2">
+                <span class="text-slate-500">Stack</span>
+                <span class="font-semibold">Tailwind + Chart.js + Supabase</span>
+              </div>
+              <div class="flex justify-between border-b border-slate-100 pb-2">
+                <span class="text-slate-500">Backend</span>
+                <span class="font-semibold">Supabase</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card p-5 fade-in">
+            <div class="mb-4">
+              <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Cache</div>
+              <h2 class="text-base font-bold m-0">Service Worker</h2>
+            </div>
+            <p class="text-sm text-slate-600 mb-3">Se algo parecer fora ou desatualizado, limpe o cache do navegador para a app principal e recarregue o dashboard.</p>
+            <button id="cfg-clear-sw" class="px-4 h-11 rounded-lg bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition border border-slate-300">Limpar cache e recarregar</button>
+          </div>
+        </div>
+      </div>
 
       <footer class="text-center text-xs text-[#607086] py-4">
         Dashboard executivo · MVP · Dados em tempo real do Supabase
@@ -835,11 +1014,275 @@
 
     document.getElementById("filtro-filial").addEventListener("change", loadAll);
 
-    // Bootstrap: carrega lista de filiais primeiro, depois dados
-    loadFiliais().then(loadAll);
+    // ===== Configurações persistentes =====
+    function loadConfig() {
+      return {
+        refresh: parseInt(localStorage.getItem("dashboard:refresh") || "60000", 10),
+        periodo: parseInt(localStorage.getItem("dashboard:periodo") || "30", 10),
+      };
+    }
+    function saveConfig(key, value) {
+      localStorage.setItem("dashboard:" + key, String(value));
+    }
 
-    // Auto-refresh a cada 60s
-    setInterval(loadAll, 60000);
+    let refreshTimer = null;
+    function applyRefreshInterval(ms) {
+      if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+      if (ms > 0) refreshTimer = setInterval(loadAll, ms);
+    }
+
+    function initConfiguracoes() {
+      const cfg = loadConfig();
+      document.getElementById("cfg-refresh").value = String(cfg.refresh);
+      document.getElementById("cfg-periodo").value = String(cfg.periodo);
+      document.getElementById("filtro-periodo").value = String(cfg.periodo);
+      applyRefreshInterval(cfg.refresh);
+
+      document.getElementById("cfg-refresh").addEventListener("change", function() {
+        const ms = parseInt(this.value, 10) || 0;
+        saveConfig("refresh", ms);
+        applyRefreshInterval(ms);
+      });
+      document.getElementById("cfg-periodo").addEventListener("change", function() {
+        const dias = parseInt(this.value, 10) || 30;
+        saveConfig("periodo", dias);
+        document.getElementById("filtro-periodo").value = String(dias);
+        loadChartLeituras();
+      });
+      document.getElementById("cfg-logout").addEventListener("click", async function() {
+        if (!confirm("Sair da sua conta agora?")) return;
+        try { await sb.auth.signOut(); } catch {}
+        location.href = "/";
+      });
+      document.getElementById("cfg-clear-sw").addEventListener("click", async function() {
+        if (!confirm("Limpar cache do service worker e recarregar?")) return;
+        try {
+          if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map(r => r.unregister()));
+          }
+          if (caches && caches.keys) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(k => caches.delete(k)));
+          }
+        } catch {}
+        location.reload();
+      });
+
+      // Preenche dados da sessao
+      sb.auth.getSession().then(({ data: { session } }) => {
+        document.getElementById("cfg-user-name").textContent = session?.user?.user_metadata?.nome || "—";
+        document.getElementById("cfg-user-email").textContent = session?.user?.email || "—";
+      }).catch(() => {});
+
+      sb.from("profiles").select("nome,email,perfil").limit(1).maybeSingle().then(({ data }) => {
+        if (data) {
+          if (data.nome) document.getElementById("cfg-user-name").textContent = data.nome;
+          if (data.email) document.getElementById("cfg-user-email").textContent = data.email;
+          if (data.perfil) document.getElementById("cfg-user-perfil").textContent = data.perfil;
+        }
+      }).catch(() => {});
+    }
+
+    // ===== Página Relatórios =====
+    let __relCache = null;
+    async function loadRelatorios() {
+      const body = document.getElementById("tabela-rel-body");
+      body.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400">Carregando…</td></tr>`;
+      try {
+        const { data: invs } = await withFilialInv(sb
+          .from("inventarios")
+          .select("id, nome, loja, filial, cc, status, data_inicio, created_at, finalizado_em")
+          .is("deleted_at", null)
+          .order("created_at", { ascending: false })
+          .limit(500));
+
+        const ids = (invs || []).map(i => i.id);
+        let stats = new Map();
+        if (ids.length) {
+          const { data: rel } = await sb
+            .from("relatorio_inventario_completo")
+            .select("inventario_id, resultado")
+            .in("inventario_id", ids)
+            .limit(200000);
+          (rel || []).forEach(r => {
+            const s = stats.get(r.inventario_id) || { encontrado: 0, divergente: 0, nao_cadastrado: 0, restante: 0 };
+            if (r.resultado in s) s[r.resultado]++;
+            stats.set(r.inventario_id, s);
+          });
+        }
+        __relCache = (invs || []).map(inv => {
+          const s = stats.get(inv.id) || { encontrado: 0, divergente: 0, nao_cadastrado: 0, restante: 0 };
+          const total = s.encontrado + s.divergente + s.nao_cadastrado + s.restante;
+          const lido = s.encontrado + s.divergente + s.nao_cadastrado;
+          return { ...inv, ...s, total, pct: total ? (lido / total) * 100 : 0 };
+        });
+        renderRelatorios();
+      } catch (e) {
+        body.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-red-600">Erro: ${e.message || e}</td></tr>`;
+      }
+    }
+    function renderRelatorios() {
+      if (!__relCache) return;
+      const q = (document.getElementById("rel-busca").value || "").toLowerCase().trim();
+      const st = document.getElementById("rel-status").value;
+      const rows = __relCache.filter(r => {
+        if (st && r.status !== st) return false;
+        if (!q) return true;
+        return String(r.loja).toLowerCase().includes(q)
+          || String(r.filial).toLowerCase().includes(q)
+          || String(r.cc).toLowerCase().includes(q)
+          || (r.nome || "").toLowerCase().includes(q);
+      });
+      const body = document.getElementById("tabela-rel-body");
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400">Nenhum inventário encontrado</td></tr>`;
+      } else {
+        body.innerHTML = rows.map(r => `
+          <tr class="border-t border-slate-100 hover:bg-slate-50 transition">
+            <td class="p-3 font-semibold">${r.loja || "—"}</td>
+            <td class="p-3">${r.filial || "—"}</td>
+            <td class="p-3">${r.cc || "—"}</td>
+            <td class="p-3 text-xs">${r.nome || "—"}</td>
+            <td class="p-3"><span class="pill ${r.status === "finalizado" ? "pill-green" : r.status === "em_andamento" ? "pill-orange" : "pill-gray"}">${r.status || "—"}</span></td>
+            <td class="p-3 text-right text-[#126b3f] font-semibold">${formatNumber(r.encontrado)}</td>
+            <td class="p-3 text-right text-[#8a4c00] font-semibold">${formatNumber(r.divergente)}</td>
+            <td class="p-3 text-right text-[#9b1c1c] font-semibold">${formatNumber(r.nao_cadastrado)}</td>
+            <td class="p-3 text-right text-slate-500">${formatNumber(r.restante)}</td>
+            <td class="p-3 text-right font-bold">${formatPercent(r.pct)}</td>
+            <td class="p-3 text-[#607086]">${r.data_inicio ? formatDate(r.data_inicio) : (r.created_at ? formatDate(r.created_at) : "—")}</td>
+            <td class="p-3 text-[#607086]">${r.finalizado_em ? formatDate(r.finalizado_em) : "—"}</td>
+          </tr>
+        `).join("");
+      }
+      document.getElementById("rel-summary").textContent = `${rows.length} inventário${rows.length === 1 ? "" : "s"} listado${rows.length === 1 ? "" : "s"} (de ${__relCache.length} carregado${__relCache.length === 1 ? "" : "s"})`;
+    }
+    function exportRelatoriosCSV() {
+      if (!__relCache || !__relCache.length) { alert("Nenhum dado para exportar"); return; }
+      const q = (document.getElementById("rel-busca").value || "").toLowerCase().trim();
+      const st = document.getElementById("rel-status").value;
+      const rows = __relCache.filter(r => {
+        if (st && r.status !== st) return false;
+        if (!q) return true;
+        return String(r.loja).toLowerCase().includes(q) || String(r.filial).toLowerCase().includes(q) || String(r.cc).toLowerCase().includes(q) || (r.nome || "").toLowerCase().includes(q);
+      });
+      const header = ["Loja", "Filial", "CC", "Nome", "Status", "Encontrados", "Divergentes", "Nao_cadastrados", "Restantes", "Total_esperado", "Pct_lido", "Data_inicio", "Finalizado_em"];
+      const esc = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+      const csv = [header.join(";")].concat(rows.map(r => [
+        r.loja, r.filial, r.cc, r.nome, r.status, r.encontrado, r.divergente, r.nao_cadastrado, r.restante, r.total, r.pct.toFixed(2).replace(".", ","), r.data_inicio || "", r.finalizado_em || ""
+      ].map(esc).join(";"))).join("\n");
+      const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `relatorio-inventarios-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+    document.getElementById("rel-busca").addEventListener("input", renderRelatorios);
+    document.getElementById("rel-status").addEventListener("change", renderRelatorios);
+    document.getElementById("rel-export-csv").addEventListener("click", exportRelatoriosCSV);
+
+    // ===== Página Usuários =====
+    let __usuCache = null;
+    async function loadUsuarios() {
+      const body = document.getElementById("tabela-usu-body");
+      body.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Carregando…</td></tr>`;
+      try {
+        const { data, error } = await sb
+          .from("profiles")
+          .select("id, nome, email, perfil, loja, setor, ativo, created_at")
+          .order("nome", { ascending: true })
+          .limit(2000);
+        if (error) throw error;
+        __usuCache = data || [];
+
+        const perfis = [...new Set(__usuCache.map(u => u.perfil).filter(Boolean))].sort();
+        const sel = document.getElementById("usu-perfil");
+        sel.innerHTML = '<option value="">Todos perfis</option>' + perfis.map(p => `<option value="${p}">${p}</option>`).join("");
+
+        renderUsuarios();
+      } catch (e) {
+        const msg = (e.message || String(e)).includes("permission")
+          ? "Sem permissao para listar usuarios. Faca login com uma conta admin no app principal e tente novamente."
+          : `Erro: ${e.message || e}`;
+        body.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-600">${msg}</td></tr>`;
+      }
+    }
+    function renderUsuarios() {
+      if (!__usuCache) return;
+      const q = (document.getElementById("usu-busca").value || "").toLowerCase().trim();
+      const p = document.getElementById("usu-perfil").value;
+      const st = document.getElementById("usu-status").value;
+      const rows = __usuCache.filter(u => {
+        if (p && u.perfil !== p) return false;
+        if (st === "ativo" && !u.ativo) return false;
+        if (st === "inativo" && u.ativo) return false;
+        if (!q) return true;
+        return (u.nome || "").toLowerCase().includes(q) || (u.email || "").toLowerCase().includes(q);
+      });
+      const body = document.getElementById("tabela-usu-body");
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Nenhum usuário encontrado</td></tr>`;
+      } else {
+        body.innerHTML = rows.map(u => `
+          <tr class="border-t border-slate-100 hover:bg-slate-50 transition">
+            <td class="p-3 font-semibold">${u.nome || "—"}</td>
+            <td class="p-3 text-[#607086]">${u.email || "—"}</td>
+            <td class="p-3"><span class="pill pill-gray">${u.perfil || "—"}</span></td>
+            <td class="p-3">${u.loja || "—"}</td>
+            <td class="p-3">${u.setor || "—"}</td>
+            <td class="p-3"><span class="pill ${u.ativo ? "pill-green" : "pill-red"}">${u.ativo ? "Ativo" : "Inativo"}</span></td>
+            <td class="p-3 text-[#607086]">${u.created_at ? formatDate(u.created_at) : "—"}</td>
+          </tr>
+        `).join("");
+      }
+      const total = __usuCache.length;
+      const ativos = __usuCache.filter(u => u.ativo).length;
+      document.getElementById("usu-summary").textContent = `${rows.length} exibido${rows.length === 1 ? "" : "s"} · ${ativos} ativo${ativos === 1 ? "" : "s"} de ${total} total`;
+    }
+    document.getElementById("usu-busca").addEventListener("input", renderUsuarios);
+    document.getElementById("usu-perfil").addEventListener("change", renderUsuarios);
+    document.getElementById("usu-status").addEventListener("change", renderUsuarios);
+
+    // ===== Roteamento por hash =====
+    function parseHash() {
+      const raw = (location.hash || "#dashboard").slice(1);
+      const [page, query] = raw.split("?");
+      const params = new URLSearchParams(query || "");
+      return { page: page || "dashboard", params };
+    }
+    function showPage(page) {
+      document.querySelectorAll(".page").forEach(el => el.hidden = el.id !== `page-${page}`);
+      document.querySelectorAll(".nav-link").forEach(el => {
+        const dp = el.getAttribute("data-page");
+        el.classList.toggle("active", dp === page);
+      });
+      document.querySelectorAll(".dashboard-only").forEach(el => {
+        el.style.display = page === "dashboard" ? "" : "none";
+      });
+      document.querySelector(".sidebar")?.classList.remove("open");
+      document.querySelector(".backdrop")?.classList.remove("open");
+      if (page === "relatorios" && !__relCache) loadRelatorios();
+      if (page === "usuarios" && !__usuCache) loadUsuarios();
+    }
+    function handleRoute() {
+      const { page, params } = parseHash();
+      const valid = ["dashboard", "relatorios", "usuarios", "configuracoes"].includes(page) ? page : "dashboard";
+      showPage(valid);
+      const focus = params.get("focus");
+      if (focus) {
+        setTimeout(() => {
+          const t = document.getElementById(focus);
+          if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 150);
+      }
+    }
+    window.addEventListener("hashchange", handleRoute);
+
+    // ===== Bootstrap =====
+    initConfiguracoes();
+    handleRoute();
+    loadFiliais().then(loadAll);
   </script>
 </body>
 </html>
