@@ -25,6 +25,11 @@
     .nav-link { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:8px; color:#dce6f5; min-height:44px; text-decoration:none; transition:background .15s; }
     .nav-link:hover, .nav-link.active { background: rgba(255,255,255,.12); color:#fff; }
     .nav-link svg { width:18px; height:18px; flex-shrink:0; }
+    .nav-link[aria-disabled="true"] { opacity:.6; cursor:default; }
+    .nav-link[aria-disabled="true"]:hover { background: transparent; }
+    .nav-section { font-size:.65rem; text-transform:uppercase; letter-spacing:.1em; color:#7f8da5; padding:16px 14px 4px; font-weight:800; }
+    .nav-section:first-child { padding-top:4px; }
+    .nav-badge { margin-left:auto; padding:2px 8px; border-radius:999px; background:rgba(55,182,166,.18); color:#37b6a6; font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
     .card { background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 4px 14px rgba(16,35,63,.04); transition: transform .2s, box-shadow .2s; }
     .card:hover { transform: translateY(-2px); box-shadow:0 10px 24px rgba(16,35,63,.08); }
     .kpi-icon { width:40px; height:40px; border-radius:10px; display:grid; place-items:center; }
@@ -58,7 +63,8 @@
           <span class="block text-[11px] text-[#b9c5d6]">Dashboard Executivo</span>
         </div>
       </div>
-      <nav class="flex flex-col gap-1.5">
+      <nav class="flex flex-col">
+        <div class="nav-section">Operacional</div>
         <a href="#" class="nav-link active">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
           Dashboard
@@ -67,21 +73,37 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
           Inventários
         </a>
-        <a href="#divergencias" class="nav-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86 2 19a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
-          Divergências
-        </a>
-        <a href="#" class="nav-link opacity-50 cursor-not-allowed" title="Em breve">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-          Transferências
-        </a>
         <a href="/" class="nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
           Mobile
         </a>
-        <a href="#" class="nav-link opacity-50 cursor-not-allowed" title="Em breve">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        <a href="#" class="nav-link" aria-disabled="true" onclick="event.preventDefault()" title="Em breve">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Transferências
+          <span class="nav-badge">Em breve</span>
+        </a>
+
+        <div class="nav-section">Análise</div>
+        <a href="#divergencias" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86 2 19a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg>
+          Divergências
+        </a>
+        <a href="#" class="nav-link" aria-disabled="true" onclick="event.preventDefault()" title="Em breve">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           Relatórios
+          <span class="nav-badge">Em breve</span>
+        </a>
+
+        <div class="nav-section">Sistema</div>
+        <a href="#" class="nav-link" aria-disabled="true" onclick="event.preventDefault()" title="Em breve">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Usuários
+          <span class="nav-badge">Em breve</span>
+        </a>
+        <a href="#" class="nav-link" aria-disabled="true" onclick="event.preventDefault()" title="Em breve">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Configurações
+          <span class="nav-badge">Em breve</span>
         </a>
       </nav>
       <div class="mt-auto pt-4 border-t border-white/15">
