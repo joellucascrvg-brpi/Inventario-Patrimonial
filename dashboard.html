@@ -288,6 +288,55 @@
       } catch { return "—"; }
     }
 
+    // ----- Filtro por filial -----
+    // window.__filial: string selecionada ("" = todas)
+    // window.__filialInvIds: null = sem filtro; array = IDs dos inventarios da filial
+    window.__filial = "";
+    window.__filialInvIds = null;
+
+    async function loadFiliais() {
+      const sel = document.getElementById("filtro-filial");
+      try {
+        const { data } = await sb.from("inventarios").select("filial").is("deleted_at", null);
+        const unique = [...new Set((data || []).map(r => r.filial).filter(v => v !== null && v !== undefined && v !== ""))];
+        unique.sort((a, b) => {
+          const na = Number(a), nb = Number(b);
+          if (!isNaN(na) && !isNaN(nb)) return na - nb;
+          return String(a).localeCompare(String(b));
+        });
+        sel.innerHTML = '<option value="">Todas as filiais</option>' + unique.map(f => `<option value="${f}">Filial ${f}</option>`).join("");
+        sel.disabled = false;
+      } catch (e) {
+        console.warn("Falha ao carregar filiais:", e);
+      }
+    }
+
+    async function refreshFilialState() {
+      const sel = document.getElementById("filtro-filial");
+      window.__filial = sel ? sel.value : "";
+      if (!window.__filial) {
+        window.__filialInvIds = null;
+        return;
+      }
+      try {
+        const { data } = await sb.from("inventarios").select("id").eq("filial", window.__filial).is("deleted_at", null);
+        window.__filialInvIds = (data || []).map(r => r.id);
+      } catch (e) {
+        console.warn("Falha ao buscar inventarios da filial:", e);
+        window.__filialInvIds = null;
+      }
+    }
+
+    function withFilialInv(q) {
+      return window.__filial ? q.eq("filial", window.__filial) : q;
+    }
+
+    function withFilialLeit(q) {
+      if (window.__filialInvIds === null) return q;
+      if (window.__filialInvIds.length === 0) return q.eq("inventario_id", "00000000-0000-0000-0000-000000000000");
+      return q.in("inventario_id", window.__filialInvIds);
+    }
+
     function kpiCard({ label, value, sub, accent = "teal", icon, emBreve = false, sparkId = null, sparkColor = null }) {
       const accents = {
         teal: { bg: "bg-[#e8f4f2]", text: "text-[#0d6e60]", spark: "#37b6a6" },
@@ -385,13 +434,13 @@
         leiturasTrend,
         invsCreated,
       ] = await Promise.all([
-        sb.from("inventarios").select("*", { count: "exact", head: true }).is("deleted_at", null),
-        sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "em_andamento").is("deleted_at", null),
-        sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "finalizado").is("deleted_at", null),
-        sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "planejado").is("deleted_at", null),
-        sb.from("relatorio_inventario_completo").select("resultado").limit(100000),
-        sb.from("leituras").select("created_at, resultado").gte("created_at", since30).limit(50000),
-        sb.from("inventarios").select("created_at").gte("created_at", since30).is("deleted_at", null).limit(10000),
+        withFilialInv(sb.from("inventarios").select("*", { count: "exact", head: true }).is("deleted_at", null)),
+        withFilialInv(sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "em_andamento").is("deleted_at", null)),
+        withFilialInv(sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "finalizado").is("deleted_at", null)),
+        withFilialInv(sb.from("inventarios").select("*", { count: "exact", head: true }).eq("status", "planejado").is("deleted_at", null)),
+        withFilialLeit(sb.from("relatorio_inventario_completo").select("resultado").limit(100000)),
+        withFilialLeit(sb.from("leituras").select("created_at, resultado").gte("created_at", since30).limit(50000)),
+        withFilialInv(sb.from("inventarios").select("created_at").gte("created_at", since30).is("deleted_at", null).limit(10000)),
       ]);
 
       const totalInv = invTotal.count || 0;
@@ -470,11 +519,11 @@
       const days = parseInt(document.getElementById("filtro-periodo").value, 10) || 30;
       document.getElementById("leituras-titulo").textContent = `Leituras por dia (últimos ${days} dias)`;
       const since = new Date(Date.now() - days * 24 * 3600 * 1000);
-      const { data, error } = await sb
+      const { data, error } = await withFilialLeit(sb
         .from("leituras")
         .select("created_at")
         .gte("created_at", since.toISOString())
-        .limit(50000);
+        .limit(50000));
 
       const byDay = new Map();
       for (let i = days - 1; i >= 0; i--) {
@@ -526,7 +575,7 @@
     }
 
     async function loadChartStatus() {
-      const { data } = await sb.from("inventarios").select("status").is("deleted_at", null);
+      const { data } = await withFilialInv(sb.from("inventarios").select("status").is("deleted_at", null));
       const buckets = { planejado: 0, em_andamento: 0, finalizado: 0, outros: 0 };
       (data || []).forEach(r => {
         if (r.status in buckets) buckets[r.status]++;
@@ -554,11 +603,11 @@
     }
 
     async function loadChartDivergencias() {
-      const { data } = await sb
+      const { data } = await withFilialLeit(sb
         .from("relatorio_inventario_completo")
         .select("loja, resultado")
         .eq("resultado", "divergente")
-        .limit(50000);
+        .limit(50000));
 
       const byLoja = new Map();
       (data || []).forEach(r => {
@@ -594,7 +643,7 @@
     }
 
     async function loadChartResultado() {
-      const { data } = await sb.from("relatorio_inventario_completo").select("resultado").limit(100000);
+      const { data } = await withFilialLeit(sb.from("relatorio_inventario_completo").select("resultado").limit(100000));
       const buckets = { encontrado: 0, divergente: 0, nao_cadastrado: 0, restante: 0 };
       (data || []).forEach(r => { if (r.resultado in buckets) buckets[r.resultado]++; });
       const ctx = document.getElementById("chart-resultado");
@@ -619,12 +668,12 @@
     }
 
     async function loadTabelaInv() {
-      const { data: invs } = await sb
+      const { data: invs } = await withFilialInv(sb
         .from("inventarios")
         .select("id, loja, filial, cc, status, data_inicio, created_at")
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
-        .limit(50);
+        .limit(50));
 
       const { data: rel } = await sb
         .from("relatorio_inventario_completo")
@@ -768,6 +817,7 @@
     async function loadAll() {
       try {
         await loadUser();
+        await refreshFilialState();
         await Promise.all([
           loadKPIs(),
           loadChartLeituras(),
@@ -782,7 +832,11 @@
       }
     }
     window.loadAll = loadAll;
-    loadAll();
+
+    document.getElementById("filtro-filial").addEventListener("change", loadAll);
+
+    // Bootstrap: carrega lista de filiais primeiro, depois dados
+    loadFiliais().then(loadAll);
 
     // Auto-refresh a cada 60s
     setInterval(loadAll, 60000);
