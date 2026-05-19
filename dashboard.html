@@ -129,6 +129,12 @@
           <div class="text-xs text-[#607086] hidden md:block">
             Última atualização<br><span id="last-sync" class="font-semibold text-[#10233f]">—</span>
           </div>
+          <select id="filtro-periodo" class="border border-slate-300 rounded-lg px-3 h-11 text-sm bg-white font-semibold text-[#10233f] cursor-pointer">
+            <option value="7">Últimos 7 dias</option>
+            <option value="30" selected>Últimos 30 dias</option>
+            <option value="90">Últimos 90 dias</option>
+            <option value="180">Últimos 6 meses</option>
+          </select>
           <button onclick="loadAll()" class="px-4 h-11 rounded-lg bg-[#10233f] text-white font-bold text-sm hover:bg-[#1a3554] transition">Atualizar</button>
           <a href="/" class="px-4 h-11 rounded-lg bg-white border border-slate-300 text-[#10233f] font-bold text-sm hover:bg-slate-50 transition inline-flex items-center">← Voltar ao App</a>
         </div>
@@ -143,7 +149,7 @@
           <div class="flex items-center justify-between mb-4">
             <div>
               <div class="text-[11px] uppercase tracking-wider text-[#37b6a6] font-bold">Atividade</div>
-              <h2 class="text-base font-bold m-0">Leituras por dia (últimos 30 dias)</h2>
+              <h2 class="text-base font-bold m-0" id="leituras-titulo">Leituras por dia (últimos 30 dias)</h2>
             </div>
             <span class="pill pill-gray" id="leituras-total-pill">—</span>
           </div>
@@ -367,7 +373,9 @@
     }
 
     async function loadChartLeituras() {
-      const since = new Date(Date.now() - 30 * 24 * 3600 * 1000);
+      const days = parseInt(document.getElementById("filtro-periodo").value, 10) || 30;
+      document.getElementById("leituras-titulo").textContent = `Leituras por dia (últimos ${days} dias)`;
+      const since = new Date(Date.now() - days * 24 * 3600 * 1000);
       const { data, error } = await sb
         .from("leituras")
         .select("created_at")
@@ -375,7 +383,7 @@
         .limit(50000);
 
       const byDay = new Map();
-      for (let i = 29; i >= 0; i--) {
+      for (let i = days - 1; i >= 0; i--) {
         const d = new Date(Date.now() - i * 24 * 3600 * 1000);
         const k = d.toISOString().slice(0, 10);
         byDay.set(k, 0);
@@ -575,6 +583,7 @@
     }
 
     document.getElementById("filtro-inv").addEventListener("input", renderTabela);
+    document.getElementById("filtro-periodo").addEventListener("change", loadChartLeituras);
 
     async function loadAll() {
       try {
