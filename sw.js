@@ -1,4 +1,4 @@
-const CACHE_NAME = "inventario-patrimonial-pwa-v85";
+const CACHE_NAME = "inventario-patrimonial-pwa-v86";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
