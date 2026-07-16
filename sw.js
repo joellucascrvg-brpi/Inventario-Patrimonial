@@ -1,7 +1,7 @@
 // IMPORTANTE: suba a versao do CACHE_NAME sempre que o index.html mudar.
 // A estrategia e cache-first, entao os PWAs ja instalados so pegam a versao nova
 // quando este arquivo muda (o browser revalida o sw.js a cada navegacao).
-const CACHE_NAME = "inventario-patrimonial-pwa-v96";
+const CACHE_NAME = "inventario-patrimonial-pwa-v97";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
